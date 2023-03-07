@@ -105,6 +105,7 @@ export default function Home({ navigation }) {
                 <View style={styles.newDoerContainer}>
                     <View
                         style={styles.newDoerBar}
+                        // TODO:make it navigating
                         onPress={() => navigation.navigate("DoerInput")}
                     >
                         <Text
