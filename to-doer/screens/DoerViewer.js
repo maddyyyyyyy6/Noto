@@ -1,8 +1,17 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    ToastAndroid,
+} from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useState } from "react";
 const DoerViewer = ({ route, navigation }) => {
+    const [isPinned, setIsPinned] = useState(false);
+    const [isStarred, setIsStarred] = useState(false);
     const doerInfo = route.params?.doer;
     const handleBack = () => {
         navigation.navigate("Home");
@@ -10,6 +19,17 @@ const DoerViewer = ({ route, navigation }) => {
     const handleDelete = () => {
         navigation.goBack();
         doerInfo.deletion(doerInfo.id);
+    };
+
+    const handlePinClick = () => {
+        setIsPinned(!isPinned);
+        if (!isPinned)
+            ToastAndroid.show("You pinned a note", ToastAndroid.SHORT);
+    };
+    const handleStarred = () => {
+        setIsStarred(!isStarred);
+        if (!isStarred)
+            ToastAndroid.show("You Starred a note", ToastAndroid.SHORT);
     };
     return (
         <View style={styles.container}>
@@ -26,20 +46,25 @@ const DoerViewer = ({ route, navigation }) => {
                         />
                     </TouchableOpacity>
                     <Text style={styles.headerText}>Edit Doer</Text>
-                    <TouchableOpacity style={styles.headerIcons}>
+                    <TouchableOpacity
+                        style={styles.headerIcons}
+                        onPress={handlePinClick}
+                    >
                         <MaterialCommunityIcons
-                            name="pin"
+                            name={isPinned ? "pin-off" : "pin"}
                             size={28}
                             color="black"
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.headerIcons}>
+                    <TouchableOpacity
+                        style={styles.headerIcons}
+                        onPress={handleStarred}
+                    >
                         <AntDesign
-                            name="staro"
+                            name={isStarred ? "star" : "staro"}
                             size={28}
                             color="black"
                             style={{ alignSelf: "center" }}
-                            // onPress={handleDelete}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.headerIcons}>
@@ -48,7 +73,7 @@ const DoerViewer = ({ route, navigation }) => {
                             size={28}
                             color="black"
                             style={{ alignSelf: "center" }}
-                            // onPress={handleDelete}
+                            onPress={handleDelete}
                         />
                     </TouchableOpacity>
                 </View>
