@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "maddycoder.projects.todo"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "72c63222-4e82-4066-a942-abe2d8c07c02"
+      }
     }
   }
 }

@@ -184,31 +184,13 @@ export default function Home({ navigation, route }) {
                             note={item.note}
                             navigation={navigation}
                             id={item.id}
+                            key={item.id}
                             deletion={handleDeleteDoer}
                             starred={item.starred}
                             pinned={item.pinned}
                         />
                     ))}
                 </ScrollView>
-
-                {/* <FlatList
-                    showsVeritcalScrollIndicator={false}
-                    ref={flatListRef}
-                    data={doers}
-                    renderItem={({ item }) => (
-                        <Doer
-                            title={item?.title}
-                            note={item?.note}
-                            navigation={navigation}
-                            id={item?.id}
-                            deletion={handleDeleteDoer}
-                            starred={item.starred}
-                            pinned={item.pinned}
-                        />
-                    )}
-                    keyExtractor={(item) => item.id}
-                    bounces="true"
-                /> */}
                 <View style={styles.newDoerContainer}>
                     <View
                         style={styles.newDoerBar}
