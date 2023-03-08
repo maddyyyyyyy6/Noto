@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import {
     FlatList,
     ScrollView,
@@ -10,63 +9,59 @@ import {
     View,
 } from "react-native";
 import Doer from "../components/Doer";
-import { useState } from "react";
-import {
-    useFonts,
-    Inter_100Thin,
-    Inter_400Regular,
-    Inter_500Medium,
-} from "@expo-google-fonts/inter";
-const Data = [
-    {
-        title: "Hacking",
-        des: "Then, you can integrate it in your project by using the useFonts hook. You can directly use this hook from the Google Fonts package. Under the hood, the hook uses Font.loadAsync. You do not have to explicitly import the font file since that is done by the package itself.",
-    },
-    {
-        title: "Hacking",
-        des: "can  the hook uses Font.loadAsync. You do not have to explicitly import the font file since that is done by the package itself.",
-    },
-    {
-        title: "Hacking",
-        des: "ct the font file since that is done by the package itself.",
-    },
-    {
-        title: "Hacking",
-        des: "ct the font file since that is done by the package itself.",
-    },
-    {
-        title: "Hacking",
-        des: "ct the font file since that is done by the package itself.",
-    },
-    {
-        title: "Hacking",
-        des: "ct the font file since that is done by the package itself.",
-    },
-    {
-        title: "Hacking",
-        des: "ct the font file since that is done by the package itself.",
-    },
-    {
-        title: "Hacking",
-        des: "ct the font file since that is done by the package itself.",
-    },
-    {
-        title: "Loading fonts on web",
-        des: "Sometimes, particularly on the web -- people choose to render their content in a platform default font while their custom font is loading. Alternatively, to render the rest of their content, that doesn't depend on the custom font while the font is loading. These approaches are called FOUT and FOIT and you can read a lot more about them on the web.In general, these strategies are not recommended for native apps. If you include your fonts in your project, the fonts will always be delivered to the user by the time your code is running. The one exception to this is that you may prefer to do this on the web.",
-    },
-];
+import { useState, useRef, useEffect } from "react";
+// import {
+//     useFonts,
+//     Inter_100Thin,
+//     Inter_400Regular,
+//     Inter_500Medium,
+// } from "@expo-google-fonts/inter";
 
-export default function Home({ navigation }) {
-    const [doers, setDoers] = useState(Data);
-    let [fontsLoaded] = useFonts({
-        Inter_100Thin,
-        Inter_400Regular,
-        Inter_500Medium,
-    });
+export default function Home({ navigation, route }) {
+    const [currentDate, setCurrentDate] = useState(new Date());
+    const timeString = currentDate.toLocaleTimeString();
+    const options = { day: "numeric", month: "long", year: "numeric" };
+    const formattedDate = currentDate.toLocaleDateString("en-US", options);
 
-    if (!fontsLoaded) {
-        return null;
-    }
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentDate(new Date());
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
+    const flatListRef = useRef();
+    const [doers, setDoers] = useState([
+        {
+            title: "Coding",
+            note: "Hello",
+        },
+        {
+            title: "Coding",
+            note: "Hello",
+        },
+        {
+            title: "Coding",
+            note: "Hello",
+        },
+    ]);
+    // let [fontsLoaded] = useFonts({
+    //     Inter_100Thin,
+    //     Inter_400Regular,
+    //     Inter_500Medium,
+    // });
+
+    // if (!fontsLoaded) {
+    //     return null;
+    // }
+    useEffect(() => {
+        const newDoer = route.params?.doer;
+        console.log(newDoer);
+        if (newDoer) {
+            setDoers([...doers, newDoer]);
+            flatListRef.current.scrollToEnd({ animated: true });
+        }
+    }, [route.params?.doer]);
+
     return (
         <View style={styles.container}>
             <View style={styles.homeContainer}>
@@ -82,22 +77,20 @@ export default function Home({ navigation }) {
                 {/* chip component */}
                 <View style={styles.chipsContainer}>
                     <TouchableHighlight style={styles.chipItem}>
-                        <Text style={styles.chipText}>06-March-2023</Text>
+                        <Text style={styles.chipText}>
+                            {/* 06-March-2023 {Date}-{Month}-{Year} */}
+                            {formattedDate}
+                        </Text>
                     </TouchableHighlight>
                     <TouchableOpacity style={styles.chipItem}>
-                        <Text style={styles.chipText}>06:44 pm</Text>
+                        <Text style={styles.chipText}>{timeString}</Text>
                     </TouchableOpacity>
                 </View>
-                {/* doer component */}
-                {/* <ScrollView style={styles.doerView}>
-                    {doers.map((doer) => (
-                        <Doer title={doer.title} description={doer.des} />
-                    ))}
-                </ScrollView> */}
                 <FlatList
+                    ref={flatListRef}
                     data={doers}
                     renderItem={({ item }) => (
-                        <Doer title={item.title} description={item.des} />
+                        <Doer title={item.title} description={item.note} onPress={() =>navigation.navigate("Viewer")} />
                     )}
                     keyExtractor={(item) => item.id}
                     bounces="true"
