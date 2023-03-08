@@ -1,6 +1,16 @@
+import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 const Doer = ({ title, note, id, navigation, deletion }) => {
+    const [bw, setBw] = useState(1);
+    const handlePress = () => {
+        setBw(1);
+
+        handleViewer(); // Call the onPress event handler
+    };
+    const handleLongPress = () => {
+        setBw(2);
+    };
     const handleViewer = () => {
         navigation.navigate("Viewer", {
             doer: {
@@ -13,9 +23,10 @@ const Doer = ({ title, note, id, navigation, deletion }) => {
     };
     return (
         <TouchableOpacity
-            style={[styles.doerContainer]}
+            style={[styles.doerContainer, { borderWidth: bw }]}
             activeOpacity={0.7}
-            onPress={handleViewer}
+            onPress={handlePress}
+            onLongPress={handleLongPress}
         >
             <Text style={styles.doerTitle}>{title}</Text>
             <Text style={styles.doerDes}>{note}</Text>

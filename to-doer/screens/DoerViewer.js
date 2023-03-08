@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
-
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 const DoerViewer = ({ route, navigation }) => {
     const doerInfo = route.params?.doer;
     const handleBack = () => {
@@ -26,13 +26,31 @@ const DoerViewer = ({ route, navigation }) => {
                         />
                     </TouchableOpacity>
                     <Text style={styles.headerText}>Edit Doer</Text>
-                    <AntDesign
-                        name="delete"
-                        size={24}
-                        color="black"
-                        style={{ alignSelf: "center" }}
-                        onPress={handleDelete}
-                    />
+                    <TouchableOpacity style={styles.headerIcons}>
+                        <MaterialCommunityIcons
+                            name="pin"
+                            size={28}
+                            color="black"
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.headerIcons}>
+                        <AntDesign
+                            name="staro"
+                            size={28}
+                            color="black"
+                            style={{ alignSelf: "center" }}
+                            // onPress={handleDelete}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.headerIcons}>
+                        <AntDesign
+                            name="delete"
+                            size={28}
+                            color="black"
+                            style={{ alignSelf: "center" }}
+                            // onPress={handleDelete}
+                        />
+                    </TouchableOpacity>
                 </View>
                 {/* Input */}
                 <View style={styles.NewDoerContainer}>
@@ -87,6 +105,9 @@ const styles = StyleSheet.create({
         fontFamily: "Inter_500Medium",
         fontSize: 21,
         flex: 1,
+    },
+    headerIcons: {
+        marginLeft: 5,
     },
     NewDoerContainer: {
         flex: 1,
