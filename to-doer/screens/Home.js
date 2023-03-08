@@ -5,12 +5,17 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    ScrollView,
 } from "react-native";
 import Doer from "../components/Doer";
 import { useState, useRef, useEffect } from "react";
-
+import { AntDesign } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function Home({ navigation, route }) {
     const [currentDate, setCurrentDate] = useState(new Date());
+    const [showStarred, setShowStarred] = useState(false);
     const timeString = currentDate.toLocaleTimeString();
     const options = { day: "numeric", month: "long", year: "numeric" };
     const formattedDate = currentDate.toLocaleDateString("en-US", options);
@@ -48,7 +53,6 @@ export default function Home({ navigation, route }) {
             newDoer = "";
         }
         let editDoer = route.params?.editDoer;
-        console.log(editDoer);
         if (editDoer) {
             let copyDoers = doers;
             copyDoers.map((doer) => {
@@ -82,20 +86,85 @@ export default function Home({ navigation, route }) {
                 </View>
                 {/* chip component */}
                 <View style={styles.chipsContainer}>
-                    <TouchableOpacity
-                        activeOpacity={0.8}
-                        style={styles.chipItem}
+                    <ScrollView
+                        bouncesZoom={true}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
                     >
-                        <Text style={styles.chipText}>{formattedDate}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        activeOpacity={0.8}
-                        style={styles.chipItem}
-                    >
-                        <Text style={styles.chipText}>{timeString}</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity
+                            activeOpacity={0.8}
+                            style={styles.chipItem}
+                        >
+                            <Text style={styles.chipText}>{formattedDate}</Text>
+                        </TouchableOpacity>
+                        {/* <TouchableOpacity
+                            activeOpacity={0.8}
+                            style={styles.chipItem}
+                        >
+                            <Text style={styles.chipText}>{timeString}</Text>
+                        </TouchableOpacity> */}
+                        <TouchableOpacity
+                            activeOpacity={0.8}
+                            style={styles.chipItem}
+                        >
+                            <MaterialCommunityIcons
+                                name="pin"
+                                size={20}
+                                color="black"
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            activeOpacity={0.8}
+                            style={[styles.chipItem, styles.chipSelecteds]}
+                        >
+                            <AntDesign
+                                name="star"
+                                size={20}
+                                color="black"
+                                style={{ alignSelf: "center" }}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            activeOpacity={0.8}
+                            style={styles.chipItem}
+                        >
+                            <Ionicons name="school" size={20} color="black" />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            activeOpacity={0.8}
+                            style={styles.chipItem}
+                        >
+                            <AntDesign
+                                name="codesquareo"
+                                size={20}
+                                color="black"
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            activeOpacity={0.8}
+                            style={styles.chipItem}
+                        >
+                            <Entypo name="code" size={20} color="black" />
+                        </TouchableOpacity>
+                    </ScrollView>
                 </View>
-                <FlatList
+                <ScrollView ref={flatListRef}>
+                    {doers.map((item) => (
+                        <Doer
+                            title={item.title}
+                            note={item.note}
+                            navigation={navigation}
+                            id={item.id}
+                            deletion={handleDeleteDoer}
+                            starred={item.starred}
+                            pinned={item.pinned}
+                        />
+                    ))}
+                </ScrollView>
+
+                {/* <FlatList
+                    showsVeritcalScrollIndicator={false}
                     ref={flatListRef}
                     data={doers}
                     renderItem={({ item }) => (
@@ -111,7 +180,7 @@ export default function Home({ navigation, route }) {
                     )}
                     keyExtractor={(item) => item.id}
                     bounces="true"
-                />
+                /> */}
                 <View style={styles.newDoerContainer}>
                     <View
                         style={styles.newDoerBar}
@@ -195,6 +264,10 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: "600",
         fontFamily: "Inter_500Medium",
+    },
+    chipSelected: {
+        borderWidth: 2,
+        borderColor: "#687076",
     },
     doerView: {
         width: "10%",
