@@ -106,12 +106,13 @@ export default function Home({ navigation }) {
                     <View
                         style={styles.newDoerBar}
                         // TODO:make it navigating
-                        onPress={() => navigation.navigate("DoerInput")}
                     >
                         <Text
+                            onPress={() => navigation.navigate("DoerInput")}
                             style={styles.newDoerText}
-                            placeholder="New Doer?"
-                        ></Text>
+                        >
+                            New Doer?
+                        </Text>
                     </View>
                 </View>
             </View>
