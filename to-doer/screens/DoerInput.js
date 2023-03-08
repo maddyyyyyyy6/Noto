@@ -2,25 +2,27 @@ import { StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import { useState, useRef, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
-import 'react-native-get-random-values';
 const DoerInput = ({ navigation }) => {
     const [title, setTitle] = useState("");
     const [note, setNote] = useState("");
     const titleInputRef = useRef(null);
+
+    const now = new Date();
+    const id = now.getTime();
     const handleBack = () => {
         if (title) {
             navigation.navigate("Home", {
                 doer: {
                     title: title,
                     note: note,
-                    id: randomId,
+                    id: id,
                 },
             });
         } else if (note) {
             navigation.navigate("Home", {
                 doer: {
                     note: note,
+                    id: id,
                 },
             });
         } else {
@@ -28,7 +30,6 @@ const DoerInput = ({ navigation }) => {
         }
     };
 
-    const randomId = uuidv4();
     useEffect(() => {
         titleInputRef.current?.focus();
     }, []);
