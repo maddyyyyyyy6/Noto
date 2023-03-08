@@ -10,8 +10,8 @@ import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useState } from "react";
 const DoerViewer = ({ route, navigation }) => {
-    const [isPinned, setIsPinned] = useState(false);
-    const [isStarred, setIsStarred] = useState(false);
+    const [isPinned, setIsPinned] = useState(doerInfo?.pinned);
+    const [isStarred, setIsStarred] = useState(doerInfo?.starred);
     const doerInfo = route.params?.doer;
     const handleBack = () => {
         navigation.navigate("Home");

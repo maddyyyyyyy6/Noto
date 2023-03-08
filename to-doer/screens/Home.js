@@ -84,6 +84,8 @@ export default function Home({ navigation, route }) {
                             navigation={navigation}
                             id={item?.id}
                             deletion={handleDeleteDoer}
+                            starred={item.starred}
+                            pinned={item.pinned}
                         />
                     )}
                     keyExtractor={(item) => item.id}

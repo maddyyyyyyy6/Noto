@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
-const Doer = ({ title, note, id, navigation, deletion }) => {
+const Doer = ({ title, note, id, navigation, deletion, starred, pinned }) => {
     const [bw, setBw] = useState(1);
     const handlePress = () => {
         setBw(1);
@@ -18,6 +18,8 @@ const Doer = ({ title, note, id, navigation, deletion }) => {
                 note: note,
                 id: id,
                 deletion: deletion,
+                starred: starred,
+                pinned: pinned,
             },
         });
     };

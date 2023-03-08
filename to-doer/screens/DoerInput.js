@@ -16,6 +16,8 @@ const DoerInput = ({ navigation }) => {
                     title: title,
                     note: note,
                     id: id,
+                    starred: false,
+                    pinned: false,
                 },
             });
         } else if (note) {
@@ -23,6 +25,8 @@ const DoerInput = ({ navigation }) => {
                 doer: {
                     note: note,
                     id: id,
+                    starred: false,
+                    pinned: false,
                 },
             });
         } else {
