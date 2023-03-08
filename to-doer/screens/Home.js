@@ -25,16 +25,26 @@ export default function Home({ navigation, route }) {
     }, []);
     const flatListRef = useRef();
     const [doers, setDoers] = useState([
-    
+        {
+            title: "Welcome Coding🎈",
+            note: "Welcome to To-Doer, the innovative task management application designed specifically for programmers. Our app provides you with a comprehensive platform to organize your tasks, set priorities, and monitor your progress.",
+            id: "18082004",
+        },
     ]);
 
     useEffect(() => {
-        const newDoer = route.params?.doer;
+        let newDoer = route.params?.doer;
         if (newDoer) {
             setDoers([...doers, newDoer]);
             flatListRef.current.scrollToEnd({ animated: true });
+            newDoer = "";
         }
     }, [route.params?.doer]);
+
+    const handleDeleteDoer = (id) => {
+        const updateDoers = doers.filter((one) => one.id != id);
+        setDoers(updateDoers);
+    };
 
     return (
         <View style={styles.container}>
@@ -51,10 +61,7 @@ export default function Home({ navigation, route }) {
                 {/* chip component */}
                 <View style={styles.chipsContainer}>
                     <TouchableHighlight style={styles.chipItem}>
-                        <Text style={styles.chipText}>
-                            {/* 06-March-2023 {Date}-{Month}-{Year} */}
-                            {formattedDate}
-                        </Text>
+                        <Text style={styles.chipText}>{formattedDate}</Text>
                     </TouchableHighlight>
                     <TouchableOpacity style={styles.chipItem}>
                         <Text style={styles.chipText}>{timeString}</Text>
@@ -65,10 +72,11 @@ export default function Home({ navigation, route }) {
                     data={doers}
                     renderItem={({ item }) => (
                         <Doer
-                            title={item.title}
-                            note={item.note}
+                            title={item?.title}
+                            note={item?.note}
                             navigation={navigation}
-                            id={item.id}
+                            id={item?.id}
+                            deletion={handleDeleteDoer}
                         />
                     )}
                     keyExtractor={(item) => item.id}
