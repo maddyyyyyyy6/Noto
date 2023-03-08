@@ -60,10 +60,16 @@ export default function Home({ navigation, route }) {
                 </View>
                 {/* chip component */}
                 <View style={styles.chipsContainer}>
-                    <TouchableHighlight style={styles.chipItem}>
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        style={styles.chipItem}
+                    >
                         <Text style={styles.chipText}>{formattedDate}</Text>
-                    </TouchableHighlight>
-                    <TouchableOpacity style={styles.chipItem}>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        style={styles.chipItem}
+                    >
                         <Text style={styles.chipText}>{timeString}</Text>
                     </TouchableOpacity>
                 </View>
