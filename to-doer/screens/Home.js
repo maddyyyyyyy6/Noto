@@ -36,7 +36,8 @@ export default function Home({ navigation, route }) {
         let newDoer = route.params?.doer;
         if (newDoer) {
             setDoers([...doers, newDoer]);
-            flatListRef.current.scrollToEnd({ animated: true });
+            if (doers.length != 0)
+                flatListRef.current.scrollToEnd({ animated: true });
             newDoer = "";
         }
     }, [route.params?.doer]);
