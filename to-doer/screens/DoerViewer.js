@@ -1,37 +1,16 @@
-import { StyleSheet, Text, View } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { View, Text, StyleSheet } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { useState, useRef, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
-import 'react-native-get-random-values';
-const DoerInput = ({ navigation }) => {
-    const [title, setTitle] = useState("");
-    const [note, setNote] = useState("");
-    const titleInputRef = useRef(null);
-    const handleBack = () => {
-        if (title) {
-            navigation.navigate("Home", {
-                doer: {
-                    title: title,
-                    note: note,
-                    id: randomId,
-                },
-            });
-        } else if (note) {
-            navigation.navigate("Home", {
-                doer: {
-                    note: note,
-                },
-            });
-        } else {
-            navigation.navigate("Home");
-        }
-    };
+import { TextInput } from "react-native-gesture-handler";
 
-    const randomId = uuidv4();
-    useEffect(() => {
-        titleInputRef.current?.focus();
-    }, []);
+const DoerViewer = ({ route, navigation }) => {
+    const doerInfo = route.params?.doer;
+    const handleBack = () => {
+        navigation.navigate("Home");
+    };
+    const handleDelete = () => {
+        console.log(doerInfo.id)
+        
+    }
     return (
         <View style={styles.container}>
             <View style={styles.InputContainer}>
@@ -42,38 +21,35 @@ const DoerInput = ({ navigation }) => {
                         size={28}
                         color="black"
                         style={{ marginRight: 10 }}
-                        onPress={() => handleBack()}
+                        onPress={handleBack}
                     />
-                    <Text style={styles.headerText}>New Doer?</Text>
+                    <Text style={styles.headerText}>Edit Doer?</Text>
+                    <AntDesign name="delete" size={24} color="black"  style={{alignSelf:"center"}} onPress={handleDelete}/>
                 </View>
                 {/* Input */}
                 <View style={styles.NewDoerContainer}>
                     <TextInput
-                        ref={titleInputRef}
                         style={styles.inputTitle}
                         placeholder="Title"
                         multiline={true}
                         numberOfLines={2}
                         textAlignVertical="top"
                         maxLength={100}
-                        onChangeText={setTitle}
-                        value={title}
-                    ></TextInput>
+                    >{doerInfo.title}</TextInput>
                     <TextInput
                         style={styles.inputNote}
                         placeholder="Note"
                         multiline={true}
                         numberOfLines={11}
                         textAlignVertical="top"
-                        onChangeText={setNote}
-                        value={note}
-                    ></TextInput>
+                    >{doerInfo.note}</TextInput>
                 </View>
             </View>
         </View>
     );
 };
-export default DoerInput;
+
+export default DoerViewer;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -98,6 +74,7 @@ const styles = StyleSheet.create({
     headerText: {
         fontFamily: "Inter_500Medium",
         fontSize: 21,
+        flex:1
     },
     NewDoerContainer: {
         flex: 1,

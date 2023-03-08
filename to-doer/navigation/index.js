@@ -1,6 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import Home from "../screens/Home";
-import DoerViewer from "../screens/DoerView";
+import DoerViewer from "../screens/DoerViewer";
+import DoerInput from "../screens/DoerInput";
 
 const Stack = createStackNavigator();
 

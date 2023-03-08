@@ -10,12 +10,6 @@ import {
 } from "react-native";
 import Doer from "../components/Doer";
 import { useState, useRef, useEffect } from "react";
-// import {
-//     useFonts,
-//     Inter_100Thin,
-//     Inter_400Regular,
-//     Inter_500Medium,
-// } from "@expo-google-fonts/inter";
 
 export default function Home({ navigation, route }) {
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -31,31 +25,11 @@ export default function Home({ navigation, route }) {
     }, []);
     const flatListRef = useRef();
     const [doers, setDoers] = useState([
-        {
-            title: "Coding",
-            note: "Hello",
-        },
-        {
-            title: "Coding",
-            note: "Hello",
-        },
-        {
-            title: "Coding",
-            note: "Hello",
-        },
+    
     ]);
-    // let [fontsLoaded] = useFonts({
-    //     Inter_100Thin,
-    //     Inter_400Regular,
-    //     Inter_500Medium,
-    // });
 
-    // if (!fontsLoaded) {
-    //     return null;
-    // }
     useEffect(() => {
         const newDoer = route.params?.doer;
-        console.log(newDoer);
         if (newDoer) {
             setDoers([...doers, newDoer]);
             flatListRef.current.scrollToEnd({ animated: true });
@@ -90,7 +64,12 @@ export default function Home({ navigation, route }) {
                     ref={flatListRef}
                     data={doers}
                     renderItem={({ item }) => (
-                        <Doer title={item.title} description={item.note} onPress={() =>navigation.navigate("Viewer")} />
+                        <Doer
+                            title={item.title}
+                            note={item.note}
+                            navigation={navigation}
+                            id={item.id}
+                        />
                     )}
                     keyExtractor={(item) => item.id}
                     bounces="true"
