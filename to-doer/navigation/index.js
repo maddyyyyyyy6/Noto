@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import Home from "../screens/Home";
-import DoerInput from "../screens/DoerInput";
+import DoerViewer from "../screens/DoerView";
 
 const Stack = createStackNavigator();
 
@@ -10,12 +10,23 @@ export default function MyStack() {
             <Stack.Screen
                 name="Home"
                 component={Home}
-                options={{ headerShown: false }}
+                options={{
+                    headerShown: false,
+                }}
             />
             <Stack.Screen
                 name="DoerInput"
                 component={DoerInput}
-                options={{ headerShown: false }}
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="Viewer"
+                component={DoerViewer}
+                options={{
+                    headerShown: false,
+                }}
             />
         </Stack.Navigator>
     );
