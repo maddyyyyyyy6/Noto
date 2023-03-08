@@ -10,22 +10,37 @@ import { TextInput } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 const DoerViewer = ({ route, navigation }) => {
-    const [isPinned, setIsPinned] = useState(doerInfo?.pinned);
-    const [isStarred, setIsStarred] = useState(doerInfo?.starred);
-
-    const doerInfo = route.params?.doer;
+    const [isPinned, setIsPinned] = useState(false);
+    const [isStarred, setIsStarred] = useState(false);
+    const [title, setTitle] = useState("");
+    const [note, setNote] = useState("");
+    const [id, setID] = useState("");
+    const doerInfo = route.params.doer;
     useEffect(() => {
-        const newinfo = route.params.doer;
-        setIsPinned(newinfo.pinned);
-        setIsStarred(newinfo.starred);
-    }, [route.params?.doer]);
-
+        handleChange();
+    }, [route.params.doer]);
+    const handleChange = () => {
+        const newInfo = route.params.doer;
+        setIsPinned(newInfo.pinned);
+        setIsStarred(newInfo.starred);
+        setTitle(newInfo.title);
+        setID(newInfo.id);
+        setNote(newInfo.note);
+    };
     const handleBack = () => {
-        navigation.navigate("Home");
+        navigation.navigate("Home", {
+            editDoer: {
+                id: id,
+                title: title,
+                note: note,
+                starred: isStarred,
+                pinned: isPinned,
+            },
+        });
     };
     const handleDelete = () => {
         navigation.goBack();
-        doerInfo.deletion(doerInfo.id);
+        doerInfo.deletion(id);
     };
 
     const handlePinClick = () => {
@@ -70,7 +85,7 @@ const DoerViewer = ({ route, navigation }) => {
                         <AntDesign
                             name={isStarred ? "star" : "staro"}
                             size={28}
-                            color={isStarred ? "gold" : "black"}
+                            color="black"
                             style={{ alignSelf: "center" }}
                         />
                     </TouchableOpacity>
@@ -93,18 +108,18 @@ const DoerViewer = ({ route, navigation }) => {
                         numberOfLines={2}
                         textAlignVertical="top"
                         maxLength={100}
-                    >
-                        {doerInfo.title}
-                    </TextInput>
+                        onChangeText={setTitle}
+                        value={title}
+                    ></TextInput>
                     <TextInput
                         style={styles.inputNote}
                         placeholder="Note"
                         multiline={true}
                         numberOfLines={11}
                         textAlignVertical="top"
-                    >
-                        {doerInfo.note}
-                    </TextInput>
+                        onChangeText={setNote}
+                        value={note}
+                    ></TextInput>
                 </View>
             </View>
         </View>

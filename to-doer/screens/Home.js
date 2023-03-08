@@ -41,14 +41,28 @@ export default function Home({ navigation, route }) {
 
     useEffect(() => {
         let newDoer = route.params?.doer;
-        console.log(newDoer);
         if (newDoer) {
             setDoers([...doers, newDoer]);
             if (doers.length != 0)
                 flatListRef.current.scrollToEnd({ animated: true });
             newDoer = "";
         }
-    }, [route.params?.doer]);
+        let editDoer = route.params?.editDoer;
+        console.log(editDoer);
+        if (editDoer) {
+            let copyDoers = doers;
+            copyDoers.map((doer) => {
+                if (doer.id == editDoer.id) {
+                    doer.title = editDoer.title;
+                    doer.note = editDoer.note;
+                    doer.starred = editDoer.starred;
+                    doer.pinned = editDoer.pinned;
+                }
+            });
+
+            setDoers(copyDoers);
+        }
+    }, [route.params]);
 
     const handleDeleteDoer = (id) => {
         const updateDoers = doers.filter((one) => one.id != id);
