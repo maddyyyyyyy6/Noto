@@ -1,19 +1,20 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
-const Doer = ({ title, note,id, navigation }) => {
+const Doer = ({ title, note, id, navigation, deletion }) => {
     const handleViewer = () => {
         navigation.navigate("Viewer", {
             doer: {
                 title: title,
                 note: note,
-                id:id
+                id: id,
+                deletion: deletion,
             },
         });
     };
     return (
         <TouchableOpacity
             style={[styles.doerContainer]}
-            activeOpacity={0.9}
+            activeOpacity={0.7}
             onPress={handleViewer}
         >
             <Text style={styles.doerTitle}>{title}</Text>
