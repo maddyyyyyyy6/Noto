@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { TextInput } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 
 const DoerViewer = ({ route, navigation }) => {
     const doerInfo = route.params?.doer;
@@ -8,23 +8,31 @@ const DoerViewer = ({ route, navigation }) => {
         navigation.navigate("Home");
     };
     const handleDelete = () => {
-        console.log(doerInfo.id)
-        
-    }
+        navigation.goBack();
+        doerInfo.deletion(doerInfo.id);
+    };
     return (
         <View style={styles.container}>
             <View style={styles.InputContainer}>
                 {/* Header */}
                 <View style={styles.headerContainer}>
+                    <TouchableOpacity>
+                        <AntDesign
+                            name="arrowleft"
+                            size={28}
+                            color="black"
+                            style={{ marginRight: 10 }}
+                            onPress={handleBack}
+                        />
+                    </TouchableOpacity>
+                    <Text style={styles.headerText}>Edit Doer</Text>
                     <AntDesign
-                        name="arrowleft"
-                        size={28}
+                        name="delete"
+                        size={24}
                         color="black"
-                        style={{ marginRight: 10 }}
-                        onPress={handleBack}
+                        style={{ alignSelf: "center" }}
+                        onPress={handleDelete}
                     />
-                    <Text style={styles.headerText}>Edit Doer?</Text>
-                    <AntDesign name="delete" size={24} color="black"  style={{alignSelf:"center"}} onPress={handleDelete}/>
                 </View>
                 {/* Input */}
                 <View style={styles.NewDoerContainer}>
@@ -35,14 +43,18 @@ const DoerViewer = ({ route, navigation }) => {
                         numberOfLines={2}
                         textAlignVertical="top"
                         maxLength={100}
-                    >{doerInfo.title}</TextInput>
+                    >
+                        {doerInfo.title}
+                    </TextInput>
                     <TextInput
                         style={styles.inputNote}
                         placeholder="Note"
                         multiline={true}
                         numberOfLines={11}
                         textAlignVertical="top"
-                    >{doerInfo.note}</TextInput>
+                    >
+                        {doerInfo.note}
+                    </TextInput>
                 </View>
             </View>
         </View>
@@ -74,7 +86,7 @@ const styles = StyleSheet.create({
     headerText: {
         fontFamily: "Inter_500Medium",
         fontSize: 21,
-        flex:1
+        flex: 1,
     },
     NewDoerContainer: {
         flex: 1,
