@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         fontSize: 17,
         color: "#687076",
         fontWeight: "200",
-        fontFamily: "Inter_100Thin",
+        fontFamily: "Inter_300Light",
     },
     shadowDoer: {
         shadowColor: "#7A7A7A",

@@ -5,12 +5,14 @@ import {
     Inter_100Thin,
     Inter_400Regular,
     Inter_500Medium,
+    Inter_300Light,
 } from "@expo-google-fonts/inter";
 export default function App() {
     let [fontsLoaded] = useFonts({
         Inter_100Thin,
         Inter_400Regular,
         Inter_500Medium,
+        Inter_300Light,
     });
 
     if (!fontsLoaded) {
