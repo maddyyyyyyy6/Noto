@@ -12,6 +12,7 @@ import { useState, useRef, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function Home({ navigation, route }) {
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -20,13 +21,39 @@ export default function Home({ navigation, route }) {
     const options = { day: "numeric", month: "long", year: "numeric" };
     const formattedDate = currentDate.toLocaleDateString("en-US", options);
 
+    // for asyncstorage
+
+    const storeData = async (doers) => {
+        try {
+            const jsonValue = JSON.stringify(doers);
+            await AsyncStorage.setItem("@doers", jsonValue);
+        } catch (e) {
+            // saving error
+        }
+    };
+
+    // getting data
+
+    const getData = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem("@doers");
+            const data = JSON.parse(jsonValue) || [];
+            setDoers(data);
+        } catch (e) {
+            // error reading value
+        }
+    };
+
+    useEffect(() => {
+        getData();
+    }, []);
+
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentDate(new Date());
         }, 1000);
         return () => clearInterval(interval);
     }, []);
-    const flatListRef = useRef();
     const [doers, setDoers] = useState([
         {
             title: "Welcome Coding🎈",
@@ -48,8 +75,7 @@ export default function Home({ navigation, route }) {
         let newDoer = route.params?.doer;
         if (newDoer) {
             setDoers([...doers, newDoer]);
-            if (doers.length != 0)
-                flatListRef.current.scrollToEnd({ animated: true });
+            storeData([...doers, newDoer]);
             newDoer = "";
         }
         let editDoer = route.params?.editDoer;
@@ -65,6 +91,7 @@ export default function Home({ navigation, route }) {
             });
 
             setDoers(copyDoers);
+            storeData(copyDoers);
         }
     }, [route.params]);
 
@@ -72,6 +99,7 @@ export default function Home({ navigation, route }) {
         const updateDoers = doers.filter((one) => one.id != id);
         setDoers(updateDoers);
     };
+
     return (
         <View style={styles.container}>
             <View style={styles.homeContainer}>
@@ -149,7 +177,7 @@ export default function Home({ navigation, route }) {
                         </TouchableOpacity>
                     </ScrollView>
                 </View>
-                <ScrollView ref={flatListRef}>
+                <ScrollView>
                     {doers.map((item) => (
                         <Doer
                             title={item.title}
