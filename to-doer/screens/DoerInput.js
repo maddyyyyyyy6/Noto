@@ -1,8 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import { useState, useRef, useEffect } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 const DoerInput = ({ navigation }) => {
+    const [isPinned, setIsPinned] = useState(false);
+    const [isStarred, setIsStarred] = useState(false);
     const [title, setTitle] = useState("");
     const [note, setNote] = useState("");
     const titleInputRef = useRef(null);
@@ -16,8 +19,8 @@ const DoerInput = ({ navigation }) => {
                     title: title,
                     note: note,
                     id: id,
-                    starred: false,
-                    pinned: false,
+                    starred: isStarred,
+                    pinned: isPinned,
                 },
             });
         } else if (note) {
@@ -25,13 +28,19 @@ const DoerInput = ({ navigation }) => {
                 doer: {
                     note: note,
                     id: id,
-                    starred: false,
-                    pinned: false,
+                    starred: isStarred,
+                    pinned: isPinned,
                 },
             });
         } else {
             navigation.navigate("Home");
         }
+    };
+    const handlePinned = () => {
+        setIsPinned(!isPinned);
+    };
+    const handleStarred = () => {
+        setIsStarred(!isStarred);
     };
 
     useEffect(() => {
@@ -50,6 +59,27 @@ const DoerInput = ({ navigation }) => {
                         onPress={() => handleBack()}
                     />
                     <Text style={styles.headerText}>New Doer?</Text>
+                    <TouchableOpacity
+                        style={styles.headerIcons}
+                        onPress={handlePinned}
+                    >
+                        <MaterialCommunityIcons
+                            name={isPinned ? "pin-off" : "pin"}
+                            size={28}
+                            color="black"
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.headerIcons}
+                        onPress={handleStarred}
+                    >
+                        <AntDesign
+                            name={isStarred ? "star" : "staro"}
+                            size={28}
+                            color="black"
+                            style={{ alignSelf: "center" }}
+                        />
+                    </TouchableOpacity>
                 </View>
                 {/* Input */}
                 <View style={styles.NewDoerContainer}>
@@ -103,6 +133,10 @@ const styles = StyleSheet.create({
     headerText: {
         fontFamily: "Inter_500Medium",
         fontSize: 21,
+        flex: 1,
+    },
+    headerIcons: {
+        marginLeft: 5,
     },
     NewDoerContainer: {
         flex: 1,

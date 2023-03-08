@@ -1,10 +1,8 @@
 import {
     FlatList,
-    ScrollView,
     StyleSheet,
     Text,
     TextInput,
-    TouchableHighlight,
     TouchableOpacity,
     View,
 } from "react-native";
@@ -29,11 +27,21 @@ export default function Home({ navigation, route }) {
             title: "Welcome Coding🎈",
             note: "Welcome to To-Doer, the innovative task management application designed specifically for programmers. Our app provides you with a comprehensive platform to organize your tasks, set priorities, and monitor your progress.",
             id: "18082004",
+            starred: true,
+            pinned: false,
+        },
+        {
+            title: "testing",
+            note: "testin",
+            id: "180820",
+            starred: true,
+            pinned: false,
         },
     ]);
 
     useEffect(() => {
         let newDoer = route.params?.doer;
+        console.log(newDoer);
         if (newDoer) {
             setDoers([...doers, newDoer]);
             if (doers.length != 0)
@@ -46,7 +54,6 @@ export default function Home({ navigation, route }) {
         const updateDoers = doers.filter((one) => one.id != id);
         setDoers(updateDoers);
     };
-
     return (
         <View style={styles.container}>
             <View style={styles.homeContainer}>

@@ -6,13 +6,20 @@ import {
     ToastAndroid,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
+import { TextInput } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 const DoerViewer = ({ route, navigation }) => {
     const [isPinned, setIsPinned] = useState(doerInfo?.pinned);
     const [isStarred, setIsStarred] = useState(doerInfo?.starred);
+
     const doerInfo = route.params?.doer;
+    useEffect(() => {
+        const newinfo = route.params.doer;
+        setIsPinned(newinfo.pinned);
+        setIsStarred(newinfo.starred);
+    }, [route.params?.doer]);
+
     const handleBack = () => {
         navigation.navigate("Home");
     };
@@ -63,7 +70,7 @@ const DoerViewer = ({ route, navigation }) => {
                         <AntDesign
                             name={isStarred ? "star" : "staro"}
                             size={28}
-                            color="black"
+                            color={isStarred ? "gold" : "black"}
                             style={{ alignSelf: "center" }}
                         />
                     </TouchableOpacity>
