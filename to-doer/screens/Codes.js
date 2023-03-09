@@ -36,11 +36,13 @@ export default function Codes({ navigation }) {
             // sort it by starred
             const codeslist = data.filter((item) => item.starred);
             codeslist.push({
-                title: "Python",
+                title: "hello world",
+                language: "python",
                 code: `print("Hello, World!")`,
             });
             codeslist.push({
-                title: "Javascript",
+                title: "view element",
+                language: "javascript",
                 code: `<View style={styles.searchBar}>
                         <TextInput
                             style={styles.searchText}
@@ -49,27 +51,29 @@ export default function Codes({ navigation }) {
                     </View>`,
             });
             codeslist.push({
-                title: "Python OOPs",
+                title: "OOPs",
+                language: "python",
                 code: `class <ClassName>:
 
-    <class_attribute_name> = <value>
+                        <class_attribute_name> = <value>
 
-    def __init__(self,<param1>, <param2>, ...):
-        self.<attr1> = <param1>
-        self.<attr2> = <param2>
-        .
-        .
-        .
-        # As many attributes as needed
-    
-   def <method_name>(self, <param1>, ...):
-       <code>
-       
-   # As many methods as needed`,
+                        def __init__(self,<param1>, <param2>, ...):
+                            self.<attr1> = <param1>
+                            self.<attr2> = <param2>
+                            .
+                            .
+                            .
+                            # As many attributes as needed
+                        
+                    def <method_name>(self, <param1>, ...):
+                        <code>
+                        
+                    # As many methods as needed`,
             });
 
             codeslist.push({
-                title: "Python Function()",
+                title: "function()",
+                language: "python",
                 code: `def __init__(self, <parameter1>, <parameter2>, ...):
         self.<attribute1> = <parameter1>  # Instance attribute
         self.<attribute2> = <parameter2>  # Instance attribute
@@ -152,6 +156,7 @@ export default function Codes({ navigation }) {
                             title={item.title}
                             code={item.code}
                             navigation={navigation}
+                            language={item.language}
                         />
                     ))}
                 </ScrollView>
