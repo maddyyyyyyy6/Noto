@@ -37,7 +37,6 @@ export default function Home({ navigation, route }) {
             const jsonValue = await AsyncStorage.getItem("@doers");
             const data = JSON.parse(jsonValue) || [];
             const sortpinned = data.filter((item) => item.pinned);
-            // const sortUnpined = data.filter((item) => !item.pinned);
             setPinnedItems(sortpinned);
             setDoers(data);
         } catch (e) {
@@ -84,12 +83,9 @@ export default function Home({ navigation, route }) {
 
     const handleDeleteDoer = (id) => {
         const updateDoers = doers.filter((one) => one.id != id);
-        setDoers(updateDoers);
-    };
-
-    const checkPinnedItems = () => {
-        const pinnedList = doers.filter((item) => item.pinned);
-        setPinnedItems(pinnedList);
+        // setDoers(updateDoers);
+        storeData(updateDoers);
+        getData();
     };
 
     return (
@@ -168,6 +164,13 @@ export default function Home({ navigation, route }) {
                     </ScrollView>
                 </View>
                 <ScrollView>
+                    {doers.length == 0 && pinnedItems.length == 0 && (
+                        <Text style={styles.infoText}>
+                            Your to-doer list is currently empty! {"\n"}
+                            Let's get started by tapping on{"\n"}
+                            New Doer? below!
+                        </Text>
+                    )}
                     {/* pinned items */}
                     {pinnedItems.length != 0 && (
                         <Text style={styles.viewText}>
@@ -331,5 +334,25 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0.8,
         borderBottomColor: "#DFE3E6",
         marginBottom: 10,
+    },
+    infoText: {
+        fontFamily: "Inter_400Regular",
+        fontSize: 18,
+        alignSelf: "center",
+        justifyContent: "center",
+        textAlign: "center",
+    },
+    buttonExample: {
+        backgroundColor: "#DFE3E6",
+        borderRadius: 11,
+        // padding: 5,
+        paddingVertical: 6,
+        paddingHorizontal: 9,
+    },
+    buttonExampleText: {
+        color: "#687076",
+        fontSize: 15,
+        fontWeight: "600",
+        fontFamily: "Inter_500Medium",
     },
 });
