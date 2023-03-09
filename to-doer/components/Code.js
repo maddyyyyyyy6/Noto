@@ -1,11 +1,14 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 
-export default function Code({ title, code }) {
+export default function Code({ title, code, language }) {
     return (
         <View style={styles.codeContainer}>
             <View style={styles.headerContainer}>
                 <Text style={styles.headerText}>{title}</Text>
+                <View style={styles.chipLanguage}>
+                    <Text style={styles.languageText}>{language}</Text>
+                </View>
             </View>
             <View style={styles.codeViewContainer}>
                 <Text style={styles.codeText}>{code}</Text>
@@ -26,6 +29,8 @@ const styles = StyleSheet.create({
     },
     headerContainer: {
         padding: 10,
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
     headerText: {
         fontSize: 20,
@@ -43,6 +48,19 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: "#687076",
         fontWeight: "600",
+        fontFamily: "Inter_500Medium",
+    },
+    chipLanguage: {
+        backgroundColor: "#DFE3E6",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingVertical: 2,
+        paddingHorizontal: 7,
+        borderRadius: 9,
+    },
+    languageText: {
+        fontSize: 11,
+        color: "#687076",
         fontFamily: "Inter_500Medium",
     },
 });
