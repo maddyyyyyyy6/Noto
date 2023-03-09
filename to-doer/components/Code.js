@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     },
     headerText: {
         fontSize: 20,
+        fontFamily: "Inter_500Medium",
     },
     codeViewContainer: {
         backgroundColor: "#3A3E4E",
@@ -40,5 +41,8 @@ const styles = StyleSheet.create({
     codeText: {
         color: "white",
         fontSize: 14,
+        color: "#687076",
+        fontWeight: "600",
+        fontFamily: "Inter_500Medium",
     },
 });
