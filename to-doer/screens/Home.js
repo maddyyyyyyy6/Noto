@@ -123,7 +123,7 @@ export default function Home({ navigation, route }) {
                         >
                             <Text style={styles.chipText}>{timeString}</Text>
                         </TouchableOpacity> */}
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             activeOpacity={0.8}
                             style={styles.chipItem}
                         >
@@ -132,16 +132,16 @@ export default function Home({ navigation, route }) {
                                 size={20}
                                 color="black"
                             />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <TouchableOpacity
                             activeOpacity={0.8}
                             style={[styles.chipItem, styles.chipSelecteds]}
                             onPress={() => navigation.navigate("Starred")}
                         >
                             <AntDesign
-                                name="star"
+                                name="staro"
                                 size={20}
-                                color="black"
+                                color="#687076"
                                 style={{ alignSelf: "center" }}
                             />
                         </TouchableOpacity>
@@ -170,7 +170,14 @@ export default function Home({ navigation, route }) {
                 <ScrollView>
                     {/* pinned items */}
                     {pinnedItems.length != 0 && (
-                        <Text style={styles.viewText}>Pinned</Text>
+                        <Text style={styles.viewText}>
+                            Pinned
+                            <MaterialCommunityIcons
+                                name="pin"
+                                size={18}
+                                color="#687076"
+                            />
+                        </Text>
                     )}
 
                     {pinnedItems.map((item) => (
@@ -317,6 +324,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: "600",
         fontFamily: "Inter_500Medium",
+        marginBottom: 2,
     },
     separator: {
         height: 1,
