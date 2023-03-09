@@ -59,6 +59,11 @@ export default function Starred({ navigation }) {
                     </TouchableOpacity>
                 </View>
                 <ScrollView style={styles.notoContainer}>
+                    {list.length == 0 && (
+                        <Text style={styles.infoText}>
+                            You haven't starred any tasks yet.
+                        </Text>
+                    )}
                     {list.map((item) => (
                         <Doer
                             title={item.title}
@@ -104,5 +109,11 @@ const styles = StyleSheet.create({
     notoContainer: {
         flex: 1,
         width: "100%",
+    },
+    infoText: {
+        fontFamily: "Inter_400Regular",
+        fontSize: 18,
+        alignSelf: "center",
+        justifyContent: "center",
     },
 });
