@@ -17,6 +17,7 @@ export default function Home({ navigation, route }) {
     // const timeString = currentDate.toLocaleTimeString();
     // const options = { day: "numeric", month: "long", year: "numeric" };
     // const formattedDate = currentDate.toLocaleDateString("en-US", options);
+    const [pinnedItems, setPinnedItems] = useState([]);
 
     // for asyncstorage
 
@@ -35,6 +36,9 @@ export default function Home({ navigation, route }) {
         try {
             const jsonValue = await AsyncStorage.getItem("@doers");
             const data = JSON.parse(jsonValue) || [];
+            const sortpinned = data.filter((item) => item.pinned);
+            // const sortUnpined = data.filter((item) => !item.pinned);
+            setPinnedItems(sortpinned);
             setDoers(data);
         } catch (e) {
             // error reading value
@@ -56,9 +60,9 @@ export default function Home({ navigation, route }) {
     useEffect(() => {
         let newDoer = route.params?.doer;
         if (newDoer) {
-            setDoers([...doers, newDoer]);
             storeData([...doers, newDoer]);
             newDoer = "";
+            getData();
         }
         let editDoer = route.params?.editDoer;
         if (editDoer) {
@@ -72,14 +76,20 @@ export default function Home({ navigation, route }) {
                 }
             });
 
-            setDoers(copyDoers);
+            // setDoers(copyDoers);
             storeData(copyDoers);
+            getData();
         }
     }, [route.params]);
 
     const handleDeleteDoer = (id) => {
         const updateDoers = doers.filter((one) => one.id != id);
         setDoers(updateDoers);
+    };
+
+    const checkPinnedItems = () => {
+        const pinnedList = doers.filter((item) => item.pinned);
+        setPinnedItems(pinnedList);
     };
 
     return (
@@ -158,7 +168,12 @@ export default function Home({ navigation, route }) {
                     </ScrollView>
                 </View>
                 <ScrollView>
-                    {doers.map((item) => (
+                    {/* pinned items */}
+                    {pinnedItems.length != 0 && (
+                        <Text style={styles.viewText}>Pinned</Text>
+                    )}
+
+                    {pinnedItems.map((item) => (
                         <Doer
                             title={item.title}
                             note={item.note}
@@ -170,6 +185,43 @@ export default function Home({ navigation, route }) {
                             pinned={item.pinned}
                         />
                     ))}
+                    {pinnedItems.length != 0 && (
+                        <View style={styles.separator}></View>
+                    )}
+                    {/* <Text style={styles.viewText}>unPinned</Text> */}
+                    {/* other items */}
+                    {/* {doers.map((item) => {
+                        if (!item.pinned) {
+                            return (
+                                <Doer
+                                    title={item.title}
+                                    note={item.note}
+                                    navigation={navigation}
+                                    id={item.id}
+                                    key={item.id}
+                                    deletion={handleDeleteDoer}
+                                    starred={item.starred}
+                                    pinned={item.pinned}
+                                />
+                            );
+                        }
+                    })} */}
+                    {doers.map((item) => {
+                        if (!item.pinned) {
+                            return (
+                                <Doer
+                                    title={item.title}
+                                    note={item.note}
+                                    navigation={navigation}
+                                    id={item.id}
+                                    key={item.id}
+                                    deletion={handleDeleteDoer}
+                                    starred={item.starred}
+                                    pinned={item.pinned}
+                                />
+                            );
+                        }
+                    })}
                 </ScrollView>
                 <View style={styles.newDoerContainer}>
                     <View style={styles.newDoerBar}>
@@ -259,5 +311,17 @@ const styles = StyleSheet.create({
     doerView: {
         width: "10%",
         flex: 1,
+    },
+    viewText: {
+        color: "#687076",
+        fontSize: 15,
+        fontWeight: "600",
+        fontFamily: "Inter_500Medium",
+    },
+    separator: {
+        height: 1,
+        borderBottomWidth: 0.8,
+        borderBottomColor: "#DFE3E6",
+        marginBottom: 10,
     },
 });
