@@ -119,12 +119,12 @@ export default function Home({ navigation, route }) {
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
                     >
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             activeOpacity={0.8}
                             style={styles.chipItem}
                         >
                             <Text style={styles.chipText}>{formattedDate}</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         {/* <TouchableOpacity
                             activeOpacity={0.8}
                             style={styles.chipItem}
@@ -190,9 +190,7 @@ export default function Home({ navigation, route }) {
                     ))}
                 </ScrollView>
                 <View style={styles.newDoerContainer}>
-                    <View
-                        style={styles.newDoerBar}
-                    >
+                    <View style={styles.newDoerBar}>
                         <Text
                             onPress={() => navigation.navigate("DoerInput")}
                             style={styles.newDoerText}
