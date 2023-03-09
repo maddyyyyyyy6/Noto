@@ -153,30 +153,26 @@ export default function Home({ navigation, route }) {
                                 style={{ alignSelf: "center" }}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             activeOpacity={0.8}
                             style={styles.chipItem}
                         >
                             <Ionicons name="school" size={20} color="black" />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
 
-                        <TouchableOpacity
-                            activeOpacity={0.8}
-                            style={styles.chipItem}
-                        >
-                            <AntDesign
-                                name="codesquareo"
-                                size={20}
-                                color="black"
-                            />
-                        </TouchableOpacity>
                         <TouchableOpacity
                             activeOpacity={0.8}
                             style={styles.chipItem}
                             onPress={() => navigation.navigate("Codes")}
                         >
-                            <Entypo name="code" size={20} color="black" />
+                            <Text style={styles.chipText}>Codes</Text>
                         </TouchableOpacity>
+                        {/* <TouchableOpacity
+                            activeOpacity={0.8}
+                            style={styles.chipItem}
+                        >
+                            <Entypo name="code" size={20} color="black" />
+                        </TouchableOpacity> */}
                     </ScrollView>
                 </View>
                 <ScrollView>
