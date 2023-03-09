@@ -144,6 +144,7 @@ export default function Home({ navigation, route }) {
                         <TouchableOpacity
                             activeOpacity={0.8}
                             style={[styles.chipItem, styles.chipSelecteds]}
+                            onPress={() => navigation.navigate("Starred")}
                         >
                             <AntDesign
                                 name="star"
@@ -172,6 +173,7 @@ export default function Home({ navigation, route }) {
                         <TouchableOpacity
                             activeOpacity={0.8}
                             style={styles.chipItem}
+                            onPress={() => navigation.navigate("Codes")}
                         >
                             <Entypo name="code" size={20} color="black" />
                         </TouchableOpacity>
@@ -194,7 +196,6 @@ export default function Home({ navigation, route }) {
                 <View style={styles.newDoerContainer}>
                     <View
                         style={styles.newDoerBar}
-                        // TODO:make it navigating
                     >
                         <Text
                             onPress={() => navigation.navigate("DoerInput")}
