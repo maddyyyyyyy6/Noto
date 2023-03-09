@@ -1,5 +1,4 @@
 import {
-    FlatList,
     StyleSheet,
     Text,
     TextInput,
@@ -8,18 +7,16 @@ import {
     ScrollView,
 } from "react-native";
 import Doer from "../components/Doer";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function Home({ navigation, route }) {
-    const [currentDate, setCurrentDate] = useState(new Date());
-    const [showStarred, setShowStarred] = useState(false);
-    const timeString = currentDate.toLocaleTimeString();
-    const options = { day: "numeric", month: "long", year: "numeric" };
-    const formattedDate = currentDate.toLocaleDateString("en-US", options);
+    // const [currentDate, setCurrentDate] = useState(new Date());
+    // const [showStarred, setShowStarred] = useState(false);
+    // const timeString = currentDate.toLocaleTimeString();
+    // const options = { day: "numeric", month: "long", year: "numeric" };
+    // const formattedDate = currentDate.toLocaleDateString("en-US", options);
 
     // for asyncstorage
 
@@ -48,28 +45,13 @@ export default function Home({ navigation, route }) {
         getData();
     }, []);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentDate(new Date());
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
-    const [doers, setDoers] = useState([
-        {
-            title: "Welcome Coding🎈",
-            note: "Welcome to To-Doer, the innovative task management application designed specifically for programmers. Our app provides you with a comprehensive platform to organize your tasks, set priorities, and monitor your progress.",
-            id: "18082004",
-            starred: true,
-            pinned: false,
-        },
-        {
-            title: "testing",
-            note: "testin",
-            id: "180820",
-            starred: true,
-            pinned: false,
-        },
-    ]);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         setCurrentDate(new Date());
+    //     }, 1000);
+    //     return () => clearInterval(interval);
+    // }, []);
+    const [doers, setDoers] = useState([]);
 
     useEffect(() => {
         let newDoer = route.params?.doer;
