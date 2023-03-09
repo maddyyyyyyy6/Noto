@@ -3,7 +3,9 @@ import { TextInput } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import { useState, useRef, useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 const CodeInput = ({ navigation }) => {
+    const [theme, setTheme] = useState("light");
     const [isPinned, setIsPinned] = useState(false);
     const [isStarred, setIsStarred] = useState(false);
     const [title, setTitle] = useState("");
@@ -13,34 +15,10 @@ const CodeInput = ({ navigation }) => {
     const now = new Date();
     const id = now.getTime();
     const handleBack = () => {
-        if (title) {
-            navigation.navigate("Home", {
-                doer: {
-                    title: title,
-                    note: note,
-                    id: id,
-                    starred: isStarred,
-                    pinned: isPinned,
-                },
-            });
-        } else if (note) {
-            navigation.navigate("Home", {
-                doer: {
-                    note: note,
-                    id: id,
-                    starred: isStarred,
-                    pinned: isPinned,
-                },
-            });
-        } else {
-            navigation.navigate("Home");
-        }
+        navigation.goBack();
     };
-    const handlePinned = () => {
-        setIsPinned(!isPinned);
-    };
-    const handleStarred = () => {
-        setIsStarred(!isStarred);
+    const handleTheme = () => {
+        setTheme(theme == "light" ? "dark" : "light");
     };
 
     useEffect(() => {
@@ -58,8 +36,8 @@ const CodeInput = ({ navigation }) => {
                         style={{ marginRight: 10 }}
                         onPress={() => handleBack()}
                     />
-                    <Text style={styles.headerText}>New Doer?</Text>
-                    <TouchableOpacity
+                    <Text style={styles.headerText}>Code</Text>
+                    {/* <TouchableOpacity
                         style={styles.headerIcons}
                         onPress={handlePinned}
                     >
@@ -68,8 +46,8 @@ const CodeInput = ({ navigation }) => {
                             size={28}
                             color="black"
                         />
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </TouchableOpacity> */}
+                    {/* <TouchableOpacity
                         style={styles.headerIcons}
                         onPress={handleStarred}
                     >
@@ -79,29 +57,59 @@ const CodeInput = ({ navigation }) => {
                             color="black"
                             style={{ alignSelf: "center" }}
                         />
+                    </TouchableOpacity> */}
+                    <TouchableOpacity
+                        style={styles.headerIcons}
+                        onPress={handleTheme}
+                    >
+                        <Feather
+                            name={theme == "light" ? "moon" : "sun"}
+                            size={24}
+                            color="black"
+                        />
                     </TouchableOpacity>
                 </View>
                 {/* Input */}
-                <View style={styles.NewDoerContainer}>
+                <View
+                    style={[
+                        styles.NewCodeContainer,
+                        {
+                            backgroundColor:
+                                theme == "light" ? "white" : "#3A3E4E",
+                        },
+                    ]}
+                >
                     <TextInput
                         ref={titleInputRef}
-                        style={styles.inputTitle}
-                        placeholder="Title"
+                        style={[
+                            styles.inputCodeTitle,
+                            { color: theme == "light" ? "black" : "white" },
+                        ]}
+                        placeholder="for what is this code is?"
                         multiline={true}
                         numberOfLines={2}
                         textAlignVertical="top"
                         maxLength={100}
                         onChangeText={setTitle}
                         value={title}
+                        placeholderTextColor={
+                            theme == "light" ? "black" : "white"
+                        }
                     ></TextInput>
                     <TextInput
-                        style={styles.inputNote}
-                        placeholder="Note"
+                        style={[
+                            styles.inputCode,
+                            { color: theme == "light" ? "black" : "white" },
+                        ]}
+                        placeholder="Code your preferred language"
                         multiline={true}
                         numberOfLines={11}
                         textAlignVertical="top"
                         onChangeText={setNote}
                         value={note}
+                        placeholderTextColor={
+                            theme == "light" ? "black" : "white"
+                        }
                     ></TextInput>
                 </View>
             </View>
@@ -138,7 +146,7 @@ const styles = StyleSheet.create({
     headerIcons: {
         marginLeft: 5,
     },
-    NewDoerContainer: {
+    NewCodeContainer: {
         flex: 1,
         width: "100%",
         borderWidth: 1,
@@ -149,15 +157,16 @@ const styles = StyleSheet.create({
         borderColor: "#DFE3E6",
         marginBottom: 10,
     },
-    inputTitle: {
+    inputCodeTitle: {
         fontFamily: "Inter_400Regular",
         fontSize: 20,
         textAlign: "left",
         alignItems: "flex-start",
         alignContent: "flex-start",
         marginBottom: 20,
+        color: "white",
     },
-    inputNote: {
+    inputCode: {
         fontFamily: "Inter_400Regular",
         fontSize: 15,
     },

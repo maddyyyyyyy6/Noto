@@ -84,6 +84,10 @@ export default function Codes({ navigation }) {
         }
     };
 
+    const handleCodeInput = () => {
+        navigation.navigate("CodeInput");
+    };
+
     // console.log(list);
     useEffect(() => {
         getData();
@@ -152,9 +156,12 @@ export default function Codes({ navigation }) {
                     ))}
                 </ScrollView>
                 <View>
-                    <View style={styles.newCodesBar}>
+                    <TouchableOpacity
+                        style={styles.newCodesBar}
+                        onPress={handleCodeInput}
+                    >
                         <Text style={styles.newCodeText}>New Code?</Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>
