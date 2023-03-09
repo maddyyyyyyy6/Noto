@@ -108,7 +108,7 @@ const CodeInput = ({ navigation }) => {
         </View>
     );
 };
-export default DoerInput;
+export default CodeInput;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
