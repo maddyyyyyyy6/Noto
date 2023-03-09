@@ -37,11 +37,13 @@ export default function Codes({ navigation }) {
             const codeslist = data.filter((item) => item.starred);
             codeslist.push({
                 title: "hello world",
+                id: "23541342",
                 language: "python",
                 code: `print("Hello, World!")`,
             });
             codeslist.push({
                 title: "view element",
+                id: "3513245",
                 language: "javascript",
                 code: `<View style={styles.searchBar}>
                         <TextInput
@@ -52,6 +54,7 @@ export default function Codes({ navigation }) {
             });
             codeslist.push({
                 title: "OOPs",
+                id: "1234124354",
                 language: "python",
                 code: `class <ClassName>:
 
@@ -73,6 +76,7 @@ export default function Codes({ navigation }) {
 
             codeslist.push({
                 title: "function()",
+                id: "1342",
                 language: "python",
                 code: `def __init__(self, <parameter1>, <parameter2>, ...):
         self.<attribute1> = <parameter1>  # Instance attribute
@@ -153,6 +157,7 @@ export default function Codes({ navigation }) {
                 >
                     {codes.map((item) => (
                         <Code
+                            key={item.id}
                             title={item.title}
                             code={item.code}
                             navigation={navigation}
