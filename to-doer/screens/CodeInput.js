@@ -83,7 +83,7 @@ const CodeInput = ({ navigation }) => {
                         ref={titleInputRef}
                         style={[
                             styles.inputCodeTitle,
-                            { color: theme == "light" ? "black" : "white" },
+                            { color: theme == "light" ? "#687076" : "#C6C6C6" },
                         ]}
                         placeholder="for what is this code is?"
                         multiline={true}
@@ -93,13 +93,13 @@ const CodeInput = ({ navigation }) => {
                         onChangeText={setTitle}
                         value={title}
                         placeholderTextColor={
-                            theme == "light" ? "black" : "white"
+                            theme == "light" ? "#687076" : "#C6C6C6"
                         }
                     ></TextInput>
                     <TextInput
                         style={[
                             styles.inputCode,
-                            { color: theme == "light" ? "black" : "white" },
+                            { color: theme == "light" ? "#687076" : "#C6C6C6" },
                         ]}
                         placeholder="Code your preferred language"
                         multiline={true}
@@ -108,7 +108,7 @@ const CodeInput = ({ navigation }) => {
                         onChangeText={setNote}
                         value={note}
                         placeholderTextColor={
-                            theme == "light" ? "black" : "white"
+                            theme == "light" ? "#687076" : "#C6C6C6"
                         }
                     ></TextInput>
                 </View>
