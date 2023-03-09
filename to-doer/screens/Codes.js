@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#FBFCFD",
         width: "100%",
         padding: 15,
-        paddingTop: 30,
+        paddingTop: 10,
     },
     searchContainer: {
         // width: "100%",

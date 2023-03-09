@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     View,
     ScrollView,
+    StatusBar,
 } from "react-native";
 import Doer from "../components/Doer";
 import { useState, useEffect } from "react";
@@ -90,6 +91,13 @@ export default function Home({ navigation, route }) {
 
     return (
         <View style={styles.container}>
+            <StatusBar
+                animated={true}
+                backgroundColor="#FBFCFD"
+                barStyle={"dark-content"}
+                // showHideTransition={statusBarTransition}
+                // hidden={"true"}
+            />
             <View style={styles.homeContainer}>
                 {/* search bar component */}
                 <View style={styles.searchContainer}>
@@ -260,7 +268,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#FBFCFD",
         width: "100%",
         padding: 15,
-        paddingTop: 30,
+        paddingTop: 10,
     },
     searchContainer: {
         // width: "100%",
