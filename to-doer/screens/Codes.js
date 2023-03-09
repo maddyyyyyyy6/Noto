@@ -16,7 +16,15 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Code from "../components/Code";
 export default function Codes({ navigation }) {
     const [codes, setCodes] = useState([]);
-    const [languages, setLanguages] = useState(["Python", "Javascript"]);
+    const [languages, setLanguages] = useState([
+        "Python",
+        "Javascript",
+        "C++",
+        "Swift",
+        "Scala",
+        "Rust",
+        "Bash",
+    ]);
 
     // get list from async storage
 
@@ -27,6 +35,49 @@ export default function Codes({ navigation }) {
 
             // sort it by starred
             const codeslist = data.filter((item) => item.starred);
+            codeslist.push({
+                title: "Python",
+                code: `print("Hello, World!")`,
+            });
+            codeslist.push({
+                title: "Javascript",
+                code: `<View style={styles.searchBar}>
+                        <TextInput
+                            style={styles.searchText}
+                            placeholder="Search Codes"
+                        ></TextInput>
+                    </View>`,
+            });
+            codeslist.push({
+                title: "Python OOPs",
+                code: `class <ClassName>:
+
+    <class_attribute_name> = <value>
+
+    def __init__(self,<param1>, <param2>, ...):
+        self.<attr1> = <param1>
+        self.<attr2> = <param2>
+        .
+        .
+        .
+        # As many attributes as needed
+    
+   def <method_name>(self, <param1>, ...):
+       <code>
+       
+   # As many methods as needed`,
+            });
+
+            codeslist.push({
+                title: "Python Function()",
+                code: `def __init__(self, <parameter1>, <parameter2>, ...):
+        self.<attribute1> = <parameter1>  # Instance attribute
+        self.<attribute2> = <parameter2>  # Instance attribute
+        .
+        .
+        .
+        # As many instance attributes as needed`,
+            });
             setCodes(codeslist);
         } catch (e) {
             //
@@ -83,16 +134,19 @@ export default function Codes({ navigation }) {
                                 activeOpacity={0.8}
                                 style={[styles.chipItem, styles.chipSelecteds]}
                             >
-                                <Text>{language}</Text>
+                                <Text style={styles.chipText}>{language}</Text>
                             </TouchableOpacity>
                         ))}
                     </ScrollView>
                 </View>
-                <ScrollView style={styles.notoContainer}>
+                <ScrollView
+                    style={styles.notoContainer}
+                    showsVerticalScrollIndicator={false}
+                >
                     {codes.map((item) => (
                         <Code
                             title={item.title}
-                            code={item.note}
+                            code={item.code}
                             navigation={navigation}
                         />
                     ))}
