@@ -51,6 +51,11 @@ export default function Home({ navigation, route }) {
         getData();
     }, []);
 
+    // for search term update when user typed something in the search bar
+    useEffect(() => {
+        handleSearch();
+    }, [searchedTerm]);
+
     // useEffect(() => {
     //     const interval = setInterval(() => {
     //         setCurrentDate(new Date());
