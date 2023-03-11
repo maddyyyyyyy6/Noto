@@ -96,6 +96,17 @@ export default function Home({ navigation, route }) {
         getData();
     };
 
+    // search handling function
+    const handleSearch = (searchTerm) => {
+        if (searchTerm == "") {
+            // set to default list of doers
+        } else {
+            let copy = doers;
+            copy = copy.filter((item) => item.title.contains(searchTerm));
+            setDoers(copy);
+        }
+    };
+
     return (
         <View style={styles.container}>
             <StatusBar
