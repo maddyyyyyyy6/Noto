@@ -20,6 +20,8 @@ export default function Home({ navigation, route }) {
     // const formattedDate = currentDate.toLocaleDateString("en-US", options);
     const [pinnedItems, setPinnedItems] = useState([]);
 
+    const [searchedTerm, setSearchedTerm] = useState("");
+
     // for asyncstorage
 
     const storeData = async (doers) => {
