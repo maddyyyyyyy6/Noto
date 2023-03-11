@@ -10,17 +10,19 @@ import {
 import Doer from "../components/Doer";
 import { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
+import { EvilIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function Home({ navigation, route }) {
+    const [doers, setDoers] = useState([]);
     // const [currentDate, setCurrentDate] = useState(new Date());
     // const [showStarred, setShowStarred] = useState(false);
     // const timeString = currentDate.toLocaleTimeString();
     // const options = { day: "numeric", month: "long", year: "numeric" };
     // const formattedDate = currentDate.toLocaleDateString("en-US", options);
     const [pinnedItems, setPinnedItems] = useState([]);
-
     const [searchedTerm, setSearchedTerm] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
 
     // for asyncstorage
 
@@ -53,7 +55,7 @@ export default function Home({ navigation, route }) {
 
     // for search term update when user typed something in the search bar
     useEffect(() => {
-        handleSearch();
+        handleSearch(searchedTerm);
     }, [searchedTerm]);
 
     // useEffect(() => {
@@ -62,7 +64,6 @@ export default function Home({ navigation, route }) {
     //     }, 1000);
     //     return () => clearInterval(interval);
     // }, []);
-    const [doers, setDoers] = useState([]);
 
     useEffect(() => {
         let newDoer = route.params?.doer;
@@ -97,14 +98,21 @@ export default function Home({ navigation, route }) {
     };
 
     // search handling function
-    const handleSearch = (searchTerm) => {
-        if (searchTerm == "") {
-            // set to default list of doers
-        } else {
-            let copy = doers;
-            copy = copy.filter((item) => item.title.contains(searchTerm));
-            setDoers(copy);
-        }
+    const handleSearch = (_searchTerm) => {
+        let copy = doers;
+
+        // if(searchTerm.length > 0) {
+        // for (i = 0; i < len; i++) {
+        //     let search = copy.filter(
+        //         (item) => item.title[(1, 2)] == _searchTerm[i]
+        //     );
+        // }
+        // for (i = 0; i < len; i++) {
+        // console.log(_searchTerm[(1, 6)]);
+        // }
+
+        let search = copy.filter((item) => item.title.includes(_searchTerm));
+        setSearchResults(search);
     };
 
     return (
@@ -121,8 +129,10 @@ export default function Home({ navigation, route }) {
                 <View style={styles.searchContainer}>
                     <View style={styles.searchBar}>
                         <TextInput
+                            onChangeText={setSearchedTerm}
                             style={styles.searchText}
                             placeholder="Search to-doer"
+                            value={searchedTerm}
                         ></TextInput>
                     </View>
                 </View>
@@ -189,7 +199,8 @@ export default function Home({ navigation, route }) {
                         </TouchableOpacity> */}
                     </ScrollView>
                 </View>
-                <ScrollView>
+
+                <ScrollView showsVerticalScrollIndicator={false}>
                     {doers.length == 0 && pinnedItems.length == 0 && (
                         <Text style={styles.infoText}>
                             Your to-doer list is currently empty! {"\n"}
@@ -198,7 +209,7 @@ export default function Home({ navigation, route }) {
                         </Text>
                     )}
                     {/* pinned items */}
-                    {pinnedItems.length != 0 && (
+                    {!searchedTerm && pinnedItems.length != 0 && (
                         <Text style={styles.viewText}>
                             Pinned
                             <MaterialCommunityIcons
@@ -208,19 +219,31 @@ export default function Home({ navigation, route }) {
                             />
                         </Text>
                     )}
+                    {/* search results */}
+                    {searchedTerm && (
+                        <Text style={styles.viewText}>
+                            Searched Results
+                            <EvilIcons
+                                name="search"
+                                size={20}
+                                color="#687076"
+                            />
+                        </Text>
+                    )}
 
-                    {pinnedItems.map((item) => (
-                        <Doer
-                            title={item.title}
-                            note={item.note}
-                            navigation={navigation}
-                            id={item.id}
-                            key={item.id}
-                            deletion={handleDeleteDoer}
-                            starred={item.starred}
-                            pinned={item.pinned}
-                        />
-                    ))}
+                    {!searchedTerm &&
+                        pinnedItems.map((item) => (
+                            <Doer
+                                title={item.title}
+                                note={item.note}
+                                navigation={navigation}
+                                id={item.id}
+                                key={item.id}
+                                deletion={handleDeleteDoer}
+                                starred={item.starred}
+                                pinned={item.pinned}
+                            />
+                        ))}
                     {pinnedItems.length != 0 && (
                         <View style={styles.separator}></View>
                     )}
@@ -242,22 +265,38 @@ export default function Home({ navigation, route }) {
                             );
                         }
                     })} */}
-                    {doers.map((item) => {
-                        if (!item.pinned) {
-                            return (
-                                <Doer
-                                    title={item.title}
-                                    note={item.note}
-                                    navigation={navigation}
-                                    id={item.id}
-                                    key={item.id}
-                                    deletion={handleDeleteDoer}
-                                    starred={item.starred}
-                                    pinned={item.pinned}
-                                />
-                            );
-                        }
-                    })}
+                    {!searchedTerm &&
+                        doers.map((item) => {
+                            if (!item.pinned) {
+                                return (
+                                    <Doer
+                                        title={item.title}
+                                        note={item.note}
+                                        navigation={navigation}
+                                        id={item.id}
+                                        key={item.id}
+                                        deletion={handleDeleteDoer}
+                                        starred={item.starred}
+                                        pinned={item.pinned}
+                                    />
+                                );
+                            }
+                        })}
+
+                    {/* only if the search bar is not empty */}
+                    {searchedTerm &&
+                        searchResults.map((item) => (
+                            <Doer
+                                title={item.title}
+                                note={item.note}
+                                navigation={navigation}
+                                id={item.id}
+                                key={item.id}
+                                deletion={handleDeleteDoer}
+                                starred={item.starred}
+                                pinned={item.pinned}
+                            />
+                        ))}
                 </ScrollView>
                 <View style={styles.newDoerContainer}>
                     <View style={styles.newDoerBar}>
