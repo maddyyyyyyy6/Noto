@@ -43,6 +43,7 @@ const DoerInput = ({ navigation }) => {
         setIsStarred(!isStarred);
     };
 
+
     useEffect(() => {
         titleInputRef.current?.focus();
     }, []);
@@ -59,6 +60,9 @@ const DoerInput = ({ navigation }) => {
                         onPress={() => handleBack()}
                     />
                     <Text style={styles.headerText}>New Doer?</Text>
+                    <TouchableOpacity style={styles.button}>
+                        <Text style={styles.buttonText}>Create</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.headerIcons}
                         onPress={handlePinned}
@@ -160,5 +164,15 @@ const styles = StyleSheet.create({
     inputNote: {
         fontFamily: "Inter_400Regular",
         fontSize: 15,
+    },
+    button: {
+        backgroundColor: "#DFE3E6",
+        paddingVertical: 6,
+        paddingHorizontal: 9,
+        borderRadius: 7,
+    },
+    buttonText: {
+        fontSize: 15,
+        fontFamily: "Inter_500Medium",
     },
 });
