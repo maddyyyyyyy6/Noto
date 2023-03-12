@@ -13,6 +13,17 @@ const DoerInput = ({ navigation }) => {
     const now = new Date();
     const id = now.getTime();
     const handleBack = () => {
+        navigation.goBack();
+    };
+    const handlePinned = () => {
+        setIsPinned(!isPinned);
+    };
+    const handleStarred = () => {
+        setIsStarred(!isStarred);
+    };
+
+    // for handling the create button functionality
+    const handleCreate = () => {
         if (title) {
             navigation.navigate("Home", {
                 doer: {
@@ -33,16 +44,9 @@ const DoerInput = ({ navigation }) => {
                 },
             });
         } else {
-            navigation.navigate("Home");
+            //
         }
     };
-    const handlePinned = () => {
-        setIsPinned(!isPinned);
-    };
-    const handleStarred = () => {
-        setIsStarred(!isStarred);
-    };
-
 
     useEffect(() => {
         titleInputRef.current?.focus();
@@ -60,7 +64,11 @@ const DoerInput = ({ navigation }) => {
                         onPress={() => handleBack()}
                     />
                     <Text style={styles.headerText}>New Doer?</Text>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={handleCreate}
+                        disabled={!title && !note}
+                    >
                         <Text style={styles.buttonText}>Create</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
