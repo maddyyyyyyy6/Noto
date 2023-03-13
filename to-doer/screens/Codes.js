@@ -13,6 +13,7 @@ import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useIsFocused } from "@react-navigation/native";
 import Code from "../components/Code";
 export default function Codes({ navigation }) {
     const [codes, setCodes] = useState([]);
@@ -25,6 +26,7 @@ export default function Codes({ navigation }) {
         "Rust",
         "Bash",
     ]);
+    const isFocused = useIsFocused();
 
     // get list from async storage
 
@@ -34,7 +36,7 @@ export default function Codes({ navigation }) {
             const data = JSON.parse(datalist) || [];
 
             // sort it by starred
-            const codeslist = data.filter((item) => item.starred);
+            const codeslist = data;
             codeslist.push({
                 title: "hello world",
                 id: "23541342",
@@ -98,8 +100,11 @@ export default function Codes({ navigation }) {
 
     // console.log(list);
     useEffect(() => {
-        getData();
-    }, []);
+        if (isFocused) {
+            // Fetch data or trigger any function here
+            getData();
+        }
+    }, [isFocused]);
 
     return (
         <View style={styles.container}>
