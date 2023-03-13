@@ -13,6 +13,7 @@ const CodeInput = ({ navigation }) => {
     const [code, setCode] = useState("");
     const titleInputRef = useRef(null);
     const [storage, setStorage] = useState("");
+    const [language, setLanguage] = useState("");
 
     const now = new Date();
     const id = now.getTime();
@@ -28,6 +29,7 @@ const CodeInput = ({ navigation }) => {
             title: title,
             code: code,
             id: id,
+            language: language,
         };
         let data = storage;
         data.push(codeStructure);
@@ -44,12 +46,6 @@ const CodeInput = ({ navigation }) => {
     const getData = async () => {
         const data = await AsyncStorage.getItem("@codes");
         const jsonValue = JSON.parse(data);
-        let codeStructure = {
-            title: "title",
-            code: "code",
-            id: id,
-        };
-        // console.log(jsonValue);
         setStorage(jsonValue);
     };
 
@@ -70,7 +66,7 @@ const CodeInput = ({ navigation }) => {
                         onPress={() => handleBack()}
                     />
                     <Text style={styles.headerText}>Code</Text>
-                    {(title || code) && (
+                    {title && code && (
                         <TouchableOpacity
                             style={styles.button}
                             onPress={handleCreate}
@@ -100,6 +96,25 @@ const CodeInput = ({ navigation }) => {
                         },
                     ]}
                 >
+                    {/* ask for which language */}
+
+                    <TextInput
+                        ref={titleInputRef}
+                        style={[
+                            styles.inputCodeLanguage,
+                            { color: theme == "light" ? "#687076" : "#C6C6C6" },
+                        ]}
+                        placeholder="language?"
+                        multiline={true}
+                        numberOfLines={2}
+                        textAlignVertical="top"
+                        maxLength={100}
+                        onChangeText={setLanguage}
+                        value={language}
+                        placeholderTextColor={
+                            theme == "light" ? "#687076" : "#C6C6C6"
+                        }
+                    ></TextInput>
                     <TextInput
                         ref={titleInputRef}
                         style={[
@@ -177,6 +192,15 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#DFE3E6",
         marginBottom: 10,
+    },
+    inputCodeLanguage: {
+        fontFamily: "Inter_400Regular",
+        fontSize: 15,
+        textAlign: "left",
+        alignItems: "flex-start",
+        alignContent: "flex-start",
+        marginBottom: 10,
+        color: "white",
     },
     inputCodeTitle: {
         fontFamily: "Inter_400Regular",
