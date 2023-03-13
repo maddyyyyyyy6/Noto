@@ -8,11 +8,7 @@ import {
     ScrollView,
 } from "react-native";
 import { useState, useRef, useEffect } from "react";
-import { AntDesign } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import Code from "../components/Code";
 export default function Codes({ navigation }) {
@@ -34,60 +30,7 @@ export default function Codes({ navigation }) {
         try {
             const datalist = await AsyncStorage.getItem("@codes");
             const data = JSON.parse(datalist) || [];
-
-            // sort it by starred
             const codeslist = data;
-            codeslist.push({
-                title: "hello world",
-                id: "23541342",
-                language: "python",
-                code: `print("Hello, World!")`,
-            });
-            codeslist.push({
-                title: "view element",
-                id: "3513245",
-                language: "javascript",
-                code: `<View style={styles.searchBar}>
-                        <TextInput
-                            style={styles.searchText}
-                            placeholder="Search Codes"
-                        ></TextInput>
-                    </View>`,
-            });
-            codeslist.push({
-                title: "OOPs",
-                id: "1234124354",
-                language: "python",
-                code: `class <ClassName>:
-
-                        <class_attribute_name> = <value>
-
-                        def __init__(self,<param1>, <param2>, ...):
-                            self.<attr1> = <param1>
-                            self.<attr2> = <param2>
-                            .
-                            .
-                            .
-                            # As many attributes as needed
-                        
-                    def <method_name>(self, <param1>, ...):
-                        <code>
-                        
-                    # As many methods as needed`,
-            });
-
-            codeslist.push({
-                title: "function()",
-                id: "1342",
-                language: "python",
-                code: `def __init__(self, <parameter1>, <parameter2>, ...):
-        self.<attribute1> = <parameter1>  # Instance attribute
-        self.<attribute2> = <parameter2>  # Instance attribute
-        .
-        .
-        .
-        # As many instance attributes as needed`,
-            });
             setCodes(codeslist);
         } catch (e) {
             //
