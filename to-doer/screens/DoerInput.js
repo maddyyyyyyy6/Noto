@@ -13,6 +13,17 @@ const DoerInput = ({ navigation }) => {
     const now = new Date();
     const id = now.getTime();
     const handleBack = () => {
+        navigation.goBack();
+    };
+    const handlePinned = () => {
+        setIsPinned(!isPinned);
+    };
+    const handleStarred = () => {
+        setIsStarred(!isStarred);
+    };
+
+    // for handling the create button functionality
+    const handleCreate = () => {
         if (title) {
             navigation.navigate("Home", {
                 doer: {
@@ -33,14 +44,8 @@ const DoerInput = ({ navigation }) => {
                 },
             });
         } else {
-            navigation.navigate("Home");
+            //
         }
-    };
-    const handlePinned = () => {
-        setIsPinned(!isPinned);
-    };
-    const handleStarred = () => {
-        setIsStarred(!isStarred);
     };
 
     useEffect(() => {
@@ -59,6 +64,13 @@ const DoerInput = ({ navigation }) => {
                         onPress={() => handleBack()}
                     />
                     <Text style={styles.headerText}>New Doer?</Text>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={handleCreate}
+                        disabled={!title && !note}
+                    >
+                        <Text style={styles.buttonText}>Create</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.headerIcons}
                         onPress={handlePinned}
@@ -121,7 +133,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#FBFCFD",
         width: "100%",
         padding: 15,
-        paddingTop: 30,
+        paddingTop: 10,
     },
     headerContainer: {
         width: "100%",
@@ -160,5 +172,15 @@ const styles = StyleSheet.create({
     inputNote: {
         fontFamily: "Inter_400Regular",
         fontSize: 15,
+    },
+    button: {
+        backgroundColor: "#DFE3E6",
+        paddingVertical: 6,
+        paddingHorizontal: 9,
+        borderRadius: 7,
+    },
+    buttonText: {
+        fontSize: 15,
+        fontFamily: "Inter_500Medium",
     },
 });

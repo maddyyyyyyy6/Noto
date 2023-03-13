@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Doer = ({ title, note, id, navigation, deletion, starred, pinned }) => {
     const [bw, setBw] = useState(1);
@@ -30,7 +31,16 @@ const Doer = ({ title, note, id, navigation, deletion, starred, pinned }) => {
             onPress={handlePress}
             onLongPress={handleLongPress}
         >
-            <Text style={styles.doerTitle}>{title}</Text>
+            <View style={styles.headerContainer}>
+                <Text style={styles.doerTitle}>{title}</Text>
+                {pinned && (
+                    <MaterialCommunityIcons
+                        name="pin"
+                        size={20}
+                        color="black"
+                    />
+                )}
+            </View>
             <Text style={styles.doerDes}>{note}</Text>
         </TouchableOpacity>
     );
@@ -46,6 +56,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#DFE3E6",
         marginBottom: 10,
+    },
+    headerContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
     },
     doerTitle: {
         fontSize: 24,

@@ -1,25 +1,28 @@
 import {
-    FlatList,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
     View,
     ScrollView,
+    StatusBar,
 } from "react-native";
 import Doer from "../components/Doer";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { EvilIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function Home({ navigation, route }) {
-    const [currentDate, setCurrentDate] = useState(new Date());
-    const [showStarred, setShowStarred] = useState(false);
-    const timeString = currentDate.toLocaleTimeString();
-    const options = { day: "numeric", month: "long", year: "numeric" };
-    const formattedDate = currentDate.toLocaleDateString("en-US", options);
+    const [doers, setDoers] = useState([]);
+    // const [currentDate, setCurrentDate] = useState(new Date());
+    // const [showStarred, setShowStarred] = useState(false);
+    // const timeString = currentDate.toLocaleTimeString();
+    // const options = { day: "numeric", month: "long", year: "numeric" };
+    // const formattedDate = currentDate.toLocaleDateString("en-US", options);
+    const [pinnedItems, setPinnedItems] = useState([]);
+    const [searchedTerm, setSearchedTerm] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
 
     // for asyncstorage
 
@@ -38,6 +41,8 @@ export default function Home({ navigation, route }) {
         try {
             const jsonValue = await AsyncStorage.getItem("@doers");
             const data = JSON.parse(jsonValue) || [];
+            const sortpinned = data.filter((item) => item.pinned);
+            setPinnedItems(sortpinned);
             setDoers(data);
         } catch (e) {
             // error reading value
@@ -48,35 +53,24 @@ export default function Home({ navigation, route }) {
         getData();
     }, []);
 
+    // for search term update when user typed something in the search bar
     useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentDate(new Date());
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
-    const [doers, setDoers] = useState([
-        {
-            title: "Welcome Coding🎈",
-            note: "Welcome to To-Doer, the innovative task management application designed specifically for programmers. Our app provides you with a comprehensive platform to organize your tasks, set priorities, and monitor your progress.",
-            id: "18082004",
-            starred: true,
-            pinned: false,
-        },
-        {
-            title: "testing",
-            note: "testin",
-            id: "180820",
-            starred: true,
-            pinned: false,
-        },
-    ]);
+        handleSearch(searchedTerm);
+    }, [searchedTerm]);
+
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         setCurrentDate(new Date());
+    //     }, 1000);
+    //     return () => clearInterval(interval);
+    // }, []);
 
     useEffect(() => {
         let newDoer = route.params?.doer;
         if (newDoer) {
-            setDoers([...doers, newDoer]);
             storeData([...doers, newDoer]);
             newDoer = "";
+            getData();
         }
         let editDoer = route.params?.editDoer;
         if (editDoer) {
@@ -90,25 +84,55 @@ export default function Home({ navigation, route }) {
                 }
             });
 
-            setDoers(copyDoers);
+            // setDoers(copyDoers);
             storeData(copyDoers);
+            getData();
         }
     }, [route.params]);
 
     const handleDeleteDoer = (id) => {
         const updateDoers = doers.filter((one) => one.id != id);
-        setDoers(updateDoers);
+        // setDoers(updateDoers);
+        storeData(updateDoers);
+        getData();
+    };
+
+    // search handling function
+    const handleSearch = (_searchTerm) => {
+        let copy = doers;
+
+        // if(searchTerm.length > 0) {
+        // for (i = 0; i < len; i++) {
+        //     let search = copy.filter(
+        //         (item) => item.title[(1, 2)] == _searchTerm[i]
+        //     );
+        // }
+        // for (i = 0; i < len; i++) {
+        // console.log(_searchTerm[(1, 6)]);
+        // }
+
+        let search = copy.filter((item) => item.title.includes(_searchTerm));
+        setSearchResults(search);
     };
 
     return (
         <View style={styles.container}>
+            <StatusBar
+                animated={true}
+                backgroundColor="#FBFCFD"
+                barStyle={"dark-content"}
+                // showHideTransition={statusBarTransition}
+                // hidden={"true"}
+            />
             <View style={styles.homeContainer}>
                 {/* search bar component */}
                 <View style={styles.searchContainer}>
                     <View style={styles.searchBar}>
                         <TextInput
+                            onChangeText={setSearchedTerm}
                             style={styles.searchText}
                             placeholder="Search to-doer"
+                            value={searchedTerm}
                         ></TextInput>
                     </View>
                 </View>
@@ -119,19 +143,19 @@ export default function Home({ navigation, route }) {
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
                     >
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             activeOpacity={0.8}
                             style={styles.chipItem}
                         >
                             <Text style={styles.chipText}>{formattedDate}</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         {/* <TouchableOpacity
                             activeOpacity={0.8}
                             style={styles.chipItem}
                         >
                             <Text style={styles.chipText}>{timeString}</Text>
                         </TouchableOpacity> */}
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             activeOpacity={0.8}
                             style={styles.chipItem}
                         >
@@ -140,62 +164,142 @@ export default function Home({ navigation, route }) {
                                 size={20}
                                 color="black"
                             />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <TouchableOpacity
                             activeOpacity={0.8}
                             style={[styles.chipItem, styles.chipSelecteds]}
+                            onPress={() => navigation.navigate("Starred")}
                         >
                             <AntDesign
-                                name="star"
+                                name="staro"
                                 size={20}
-                                color="black"
+                                color="#687076"
                                 style={{ alignSelf: "center" }}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             activeOpacity={0.8}
                             style={styles.chipItem}
                         >
                             <Ionicons name="school" size={20} color="black" />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
 
                         <TouchableOpacity
                             activeOpacity={0.8}
                             style={styles.chipItem}
+                            onPress={() => navigation.navigate("Codes")}
                         >
-                            <AntDesign
-                                name="codesquareo"
-                                size={20}
-                                color="black"
-                            />
+                            <Text style={styles.chipText}>Codes</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             activeOpacity={0.8}
                             style={styles.chipItem}
                         >
                             <Entypo name="code" size={20} color="black" />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </ScrollView>
                 </View>
-                <ScrollView>
-                    {doers.map((item) => (
-                        <Doer
-                            title={item.title}
-                            note={item.note}
-                            navigation={navigation}
-                            id={item.id}
-                            key={item.id}
-                            deletion={handleDeleteDoer}
-                            starred={item.starred}
-                            pinned={item.pinned}
-                        />
-                    ))}
+
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    {doers.length == 0 && pinnedItems.length == 0 && (
+                        <Text style={styles.infoText}>
+                            Your to-doer list is currently empty! {"\n"}
+                            Let's get started by tapping on{"\n"}
+                            New Doer? below!
+                        </Text>
+                    )}
+                    {/* pinned items */}
+                    {!searchedTerm && pinnedItems.length != 0 && (
+                        <Text style={styles.viewText}>
+                            Pinned
+                            <MaterialCommunityIcons
+                                name="pin"
+                                size={18}
+                                color="#687076"
+                            />
+                        </Text>
+                    )}
+                    {/* search results */}
+                    {searchedTerm && (
+                        <Text style={styles.viewText}>
+                            Searched Results
+                            <EvilIcons
+                                name="search"
+                                size={20}
+                                color="#687076"
+                            />
+                        </Text>
+                    )}
+
+                    {!searchedTerm &&
+                        pinnedItems.map((item) => (
+                            <Doer
+                                title={item.title}
+                                note={item.note}
+                                navigation={navigation}
+                                id={item.id}
+                                key={item.id}
+                                deletion={handleDeleteDoer}
+                                starred={item.starred}
+                                pinned={item.pinned}
+                            />
+                        ))}
+                    {pinnedItems.length != 0 && (
+                        <View style={styles.separator}></View>
+                    )}
+                    {/* <Text style={styles.viewText}>unPinned</Text> */}
+                    {/* other items */}
+                    {/* {doers.map((item) => {
+                        if (!item.pinned) {
+                            return (
+                                <Doer
+                                    title={item.title}
+                                    note={item.note}
+                                    navigation={navigation}
+                                    id={item.id}
+                                    key={item.id}
+                                    deletion={handleDeleteDoer}
+                                    starred={item.starred}
+                                    pinned={item.pinned}
+                                />
+                            );
+                        }
+                    })} */}
+                    {!searchedTerm &&
+                        doers.map((item) => {
+                            if (!item.pinned) {
+                                return (
+                                    <Doer
+                                        title={item.title}
+                                        note={item.note}
+                                        navigation={navigation}
+                                        id={item.id}
+                                        key={item.id}
+                                        deletion={handleDeleteDoer}
+                                        starred={item.starred}
+                                        pinned={item.pinned}
+                                    />
+                                );
+                            }
+                        })}
+
+                    {/* only if the search bar is not empty */}
+                    {searchedTerm &&
+                        searchResults.map((item) => (
+                            <Doer
+                                title={item.title}
+                                note={item.note}
+                                navigation={navigation}
+                                id={item.id}
+                                key={item.id}
+                                deletion={handleDeleteDoer}
+                                starred={item.starred}
+                                pinned={item.pinned}
+                            />
+                        ))}
                 </ScrollView>
                 <View style={styles.newDoerContainer}>
-                    <View
-                        style={styles.newDoerBar}
-                        // TODO:make it navigating
-                    >
+                    <View style={styles.newDoerBar}>
                         <Text
                             onPress={() => navigation.navigate("DoerInput")}
                             style={styles.newDoerText}
@@ -221,7 +325,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#FBFCFD",
         width: "100%",
         padding: 15,
-        paddingTop: 30,
+        paddingTop: 10,
     },
     searchContainer: {
         // width: "100%",
@@ -282,5 +386,38 @@ const styles = StyleSheet.create({
     doerView: {
         width: "10%",
         flex: 1,
+    },
+    viewText: {
+        color: "#687076",
+        fontSize: 15,
+        fontWeight: "600",
+        fontFamily: "Inter_500Medium",
+        marginBottom: 2,
+    },
+    separator: {
+        height: 1,
+        borderBottomWidth: 0.8,
+        borderBottomColor: "#DFE3E6",
+        marginBottom: 10,
+    },
+    infoText: {
+        fontFamily: "Inter_400Regular",
+        fontSize: 18,
+        alignSelf: "center",
+        justifyContent: "center",
+        textAlign: "center",
+    },
+    buttonExample: {
+        backgroundColor: "#DFE3E6",
+        borderRadius: 11,
+        // padding: 5,
+        paddingVertical: 6,
+        paddingHorizontal: 9,
+    },
+    buttonExampleText: {
+        color: "#687076",
+        fontSize: 15,
+        fontWeight: "600",
+        fontFamily: "Inter_500Medium",
     },
 });

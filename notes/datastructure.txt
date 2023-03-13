@@ -1,0 +1,14 @@
+ // {data structure used
+        //     title: "Welcome Coding🎈",
+        //     note: "Welcome to To-Doer, the innovative task management application designed specifically for programmers. Our app provides you with a comprehensive platform to organize your tasks, set priorities, and monitor your progress.",
+        //     id: "18082004",
+        //     starred: true,
+        //     pinned: false,
+        // },
+        // {
+        //     title: "testing",
+        //     note: "testin",
+        //     id: "180820",
+        //     starred: true,
+        //     pinned: false,
+        // },
