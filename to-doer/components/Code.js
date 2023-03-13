@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     codeText: {
         color: "white",
         fontSize: 14,
-        color: "#687076",
+        color: "#DFE3E6",
         fontWeight: "600",
         fontFamily: "Inter_500Medium",
     },
