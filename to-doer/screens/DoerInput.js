@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View,Keyboard } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import { useState, useRef, useEffect } from "react";
@@ -34,6 +34,7 @@ const DoerInput = ({ navigation }) => {
                     pinned: isPinned,
                 },
             });
+            Keyboard.dismiss()
         } else if (note) {
             navigation.navigate("Home", {
                 doer: {
@@ -43,8 +44,12 @@ const DoerInput = ({ navigation }) => {
                     pinned: isPinned,
                 },
             });
+            Keyboard.dismiss()
+
         } else {
             //
+            Keyboard.dismiss()
+
         }
     };
 

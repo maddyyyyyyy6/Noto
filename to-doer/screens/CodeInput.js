@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import { useState, useRef, useEffect } from "react";
@@ -39,6 +39,7 @@ const CodeInput = ({ navigation }) => {
     const handleCreate = () => {
         saveCodeToStorage();
         navigation.goBack();
+        Keyboard.dismiss()
     };
 
     const getData = async () => {
