@@ -29,7 +29,7 @@ const CodeInput = ({ navigation }) => {
             title: title,
             code: code,
             id: id,
-            language: language,
+            language: language || "unknown",
         };
         let data = storage;
         data.push(codeStructure);
