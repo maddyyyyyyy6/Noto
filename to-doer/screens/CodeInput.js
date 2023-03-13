@@ -43,7 +43,7 @@ const CodeInput = ({ navigation }) => {
 
     const getData = async () => {
         const data = await AsyncStorage.getItem("@codes");
-        const jsonValue = JSON.parse(data);
+        const jsonValue = JSON.parse(data) || [];
         setStorage(jsonValue);
     };
 
