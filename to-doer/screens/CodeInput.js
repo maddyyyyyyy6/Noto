@@ -12,6 +12,7 @@ const CodeInput = ({ navigation }) => {
     const [title, setTitle] = useState("");
     const [code, setCode] = useState("");
     const titleInputRef = useRef(null);
+    const [storage, setStorage] = useState("");
 
     const now = new Date();
     const id = now.getTime();
@@ -28,17 +29,33 @@ const CodeInput = ({ navigation }) => {
             code: code,
             id: id,
         };
-        let codedata = JSON.stringify(codeStructure);
-        await AsyncStorage.setItem("@codes", codedata);
+        let data = storage;
+        data.push(codeStructure);
+        console.log(data);
+        let jsonValue = JSON.stringify(data);
+        console.log(jsonValue);
+        await AsyncStorage.setItem("@codes", jsonValue);
     };
     const handleCreate = () => {
         saveCodeToStorage();
         navigation.goBack();
     };
 
+    const getData = async () => {
+        const data = await AsyncStorage.getItem("@codes");
+        const jsonValue = JSON.parse(data);
+        let codeStructure = {
+            title: "title",
+            code: "code",
+            id: id,
+        };
+        // console.log(jsonValue);
+        setStorage(jsonValue);
+    };
 
     useEffect(() => {
         titleInputRef.current?.focus();
+        getData();
     }, []);
     return (
         <View style={styles.container}>
