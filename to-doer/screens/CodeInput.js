@@ -33,9 +33,7 @@ const CodeInput = ({ navigation }) => {
         };
         let data = storage;
         data.push(codeStructure);
-        console.log(data);
         let jsonValue = JSON.stringify(data);
-        console.log(jsonValue);
         await AsyncStorage.setItem("@codes", jsonValue);
     };
     const handleCreate = () => {
