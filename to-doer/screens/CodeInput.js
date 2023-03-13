@@ -4,12 +4,13 @@ import { AntDesign } from "@expo/vector-icons";
 import { useState, useRef, useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const CodeInput = ({ navigation }) => {
     const [theme, setTheme] = useState("light");
-    const [isPinned, setIsPinned] = useState(false);
-    const [isStarred, setIsStarred] = useState(false);
+    // const [isPinned, setIsPinned] = useState(false);
+    // const [isStarred, setIsStarred] = useState(false);
     const [title, setTitle] = useState("");
-    const [note, setNote] = useState("");
+    const [code, setCode] = useState("");
     const titleInputRef = useRef(null);
 
     const now = new Date();
@@ -20,6 +21,21 @@ const CodeInput = ({ navigation }) => {
     const handleTheme = () => {
         setTheme(theme == "light" ? "dark" : "light");
     };
+
+    const saveCodeToStorage = async () => {
+        let codeStructure = {
+            title: title,
+            code: code,
+            id: id,
+        };
+        let codedata = JSON.stringify(codeStructure);
+        await AsyncStorage.setItem("@codes", codedata);
+    };
+    const handleCreate = () => {
+        saveCodeToStorage();
+        navigation.goBack();
+    };
+
 
     useEffect(() => {
         titleInputRef.current?.focus();
@@ -37,27 +53,15 @@ const CodeInput = ({ navigation }) => {
                         onPress={() => handleBack()}
                     />
                     <Text style={styles.headerText}>Code</Text>
-                    {/* <TouchableOpacity
-                        style={styles.headerIcons}
-                        onPress={handlePinned}
-                    >
-                        <MaterialCommunityIcons
-                            name={isPinned ? "pin-off" : "pin"}
-                            size={28}
-                            color="black"
-                        />
-                    </TouchableOpacity> */}
-                    {/* <TouchableOpacity
-                        style={styles.headerIcons}
-                        onPress={handleStarred}
-                    >
-                        <AntDesign
-                            name={isStarred ? "star" : "staro"}
-                            size={28}
-                            color="black"
-                            style={{ alignSelf: "center" }}
-                        />
-                    </TouchableOpacity> */}
+                    {(title || code) && (
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={handleCreate}
+                            disabled={!title && !code}
+                        >
+                            <Text style={styles.buttonText}>Create</Text>
+                        </TouchableOpacity>
+                    )}
                     <TouchableOpacity
                         style={styles.headerIcons}
                         onPress={handleTheme}
@@ -105,8 +109,8 @@ const CodeInput = ({ navigation }) => {
                         multiline={true}
                         numberOfLines={11}
                         textAlignVertical="top"
-                        onChangeText={setNote}
-                        value={note}
+                        onChangeText={setCode}
+                        value={code}
                         placeholderTextColor={
                             theme == "light" ? "#687076" : "#C6C6C6"
                         }
@@ -169,5 +173,15 @@ const styles = StyleSheet.create({
     inputCode: {
         fontFamily: "Inter_400Regular",
         fontSize: 15,
+    },
+    button: {
+        backgroundColor: "#DFE3E6",
+        paddingVertical: 6,
+        paddingHorizontal: 9,
+        borderRadius: 7,
+    },
+    buttonText: {
+        fontSize: 15,
+        fontFamily: "Inter_500Medium",
     },
 });
