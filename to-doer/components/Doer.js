@@ -3,14 +3,16 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Doer = ({ title, note, id, navigation, deletion, starred, pinned }) => {
-    const [bw, setBw] = useState(1);
+    const [selected,setSelected] = useState(false)
     const handlePress = () => {
-        setBw(1);
-
-        handleViewer(); // Call the onPress event handler
+        if(selected) {
+            setSelected(false)
+        }else{
+            handleViewer(); // Call the onPress event handler
+        }
     };
     const handleLongPress = () => {
-        setBw(2);
+        setSelected(true)
     };
     const handleViewer = () => {
         navigation.navigate("Viewer", {
@@ -24,9 +26,12 @@ const Doer = ({ title, note, id, navigation, deletion, starred, pinned }) => {
             },
         });
     };
+
+    const getData = () => {
+    }
     return (
         <TouchableOpacity
-            style={[styles.doerContainer, { borderWidth: bw }]}
+            style={[styles.doerContainer, { borderWidth: selected?2.5:1,borderColor:selected?"gray":"#DFE3E6", }]}
             activeOpacity={0.7}
             onPress={handlePress}
             onLongPress={handleLongPress}
