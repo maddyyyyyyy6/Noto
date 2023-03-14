@@ -24,25 +24,22 @@ const DoerInput = ({ navigation }) => {
 
     // for handling the create button functionality
     const handleCreate = () => {
+        const data = {
+            title: title,
+            note: note,
+            id: id,
+            starred: isStarred,
+            pinned: isPinned,
+            selected:false
+        }
         if (title) {
             navigation.navigate("Home", {
-                doer: {
-                    title: title,
-                    note: note,
-                    id: id,
-                    starred: isStarred,
-                    pinned: isPinned,
-                },
+                doer: data
             });
             Keyboard.dismiss()
         } else if (note) {
             navigation.navigate("Home", {
-                doer: {
-                    note: note,
-                    id: id,
-                    starred: isStarred,
-                    pinned: isPinned,
-                },
+                doer: data
             });
             Keyboard.dismiss()
 
