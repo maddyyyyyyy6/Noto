@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View,Keyboard } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import { useState, useRef, useEffect } from "react";
@@ -24,27 +24,29 @@ const DoerInput = ({ navigation }) => {
 
     // for handling the create button functionality
     const handleCreate = () => {
+        const data = {
+            title: title,
+            note: note,
+            id: id,
+            starred: isStarred,
+            pinned: isPinned,
+            selected:false
+        }
         if (title) {
             navigation.navigate("Home", {
-                doer: {
-                    title: title,
-                    note: note,
-                    id: id,
-                    starred: isStarred,
-                    pinned: isPinned,
-                },
+                doer: data
             });
+            Keyboard.dismiss()
         } else if (note) {
             navigation.navigate("Home", {
-                doer: {
-                    note: note,
-                    id: id,
-                    starred: isStarred,
-                    pinned: isPinned,
-                },
+                doer: data
             });
+            Keyboard.dismiss()
+
         } else {
             //
+            Keyboard.dismiss()
+
         }
     };
 
