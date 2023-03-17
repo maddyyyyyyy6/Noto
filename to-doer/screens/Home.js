@@ -72,12 +72,15 @@ export default function Home({ navigation, route }) {
   // for selection functions
   // delete
 
-  const handleMultiDelete = () => {
-    let list = doers;
-    let newlist = list.filter((item) => !item.selected);
-    storeData(newlist);
-    getData();
-    setIsSelecting(false);
+  const handleDeleteButton = () => {
+    let selected = selectedItems
+    let list = doers
+    console.log(selected)
+    list = list.filter(item => !selected.includes(item.id))
+    storeData(list)
+    getData()
+    setIsSelecting(false)
+
   };
 
   useEffect(() => {
@@ -235,7 +238,7 @@ export default function Home({ navigation, route }) {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.chipItem}
-                  onPress={() => console.log(selectedItems)}
+                  onPress={handleDeleteButton}
                 >
                   <Text style={styles.chipText}>Delete</Text>
                 </TouchableOpacity>
