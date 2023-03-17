@@ -15,11 +15,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function Home({ navigation, route }) {
   const [doers, setDoers] = useState([]);
-  // const [currentDate, setCurrentDate] = useState(new Date());
-  // const [showStarred, setShowStarred] = useState(false);
-  // const timeString = currentDate.toLocaleTimeString();
-  // const options = { day: "numeric", month: "long", year: "numeric" };
-  // const formattedDate = currentDate.toLocaleDateString("en-US", options);
   const [pinnedItems, setPinnedItems] = useState([]);
   const [searchedTerm, setSearchedTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -29,7 +24,6 @@ export default function Home({ navigation, route }) {
   const [selectedItems, setSelectedItems] = useState([]);
 
   // for asyncstorage
-
   const storeData = async (doers) => {
     try {
       const jsonValue = JSON.stringify(doers);
@@ -39,12 +33,12 @@ export default function Home({ navigation, route }) {
     }
   };
 
-  // getting data
-
+  // getting doers list from Asyncstorage
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem("@doers");
       const data = JSON.parse(jsonValue) || [];
+      // for sorting pinned notes
       const sortpinned = data.filter((item) => item.pinned);
       setPinnedItems(sortpinned);
       setDoers(data);
@@ -52,26 +46,20 @@ export default function Home({ navigation, route }) {
       // error reading value
     }
   };
-
+  // getData at startup
   useEffect(() => {
     getData();
   }, []);
 
-  // for search term update when user typed something in the search bar
+  // effect when user typed in search if empty no change
   useEffect(() => {
     handleSearch(searchedTerm);
   }, [searchedTerm]);
 
-  // useEffect(() => {
-  //     const interval = setInterval(() => {
-  //         setCurrentDate(new Date());
-  //     }, 1000);
-  //     return () => clearInterval(interval);
-  // }, []);
-
   // for selection functions
-  // delete
-
+  
+  
+  // delete Button bulk selection
   const handleDeleteButton = () => {
     let selected = selectedItems
     let list = doers
@@ -82,6 +70,7 @@ export default function Home({ navigation, route }) {
 
   };
 
+  // Update and Edit storing and getting notes
   useEffect(() => {
     let newDoer = route.params?.doer;
     if (newDoer) {
@@ -101,15 +90,14 @@ export default function Home({ navigation, route }) {
         }
       });
 
-      // setDoers(copyDoers);
       storeData(copyDoers);
       getData();
     }
   }, [route.params]);
 
+  // delete from doerEdit
   const handleDeleteDoer = (id) => {
     const updateDoers = doers.filter((one) => one.id != id);
-    // setDoers(updateDoers);
     storeData(updateDoers);
     getData();
   };
@@ -117,21 +105,11 @@ export default function Home({ navigation, route }) {
   // search handling function
   const handleSearch = (_searchTerm) => {
     let copy = doers;
-
-    // if(searchTerm.length > 0) {
-    // for (i = 0; i < len; i++) {
-    //     let search = copy.filter(
-    //         (item) => item.title[(1, 2)] == _searchTerm[i]
-    //     );
-    // }
-    // for (i = 0; i < len; i++) {
-    // console.log(_searchTerm[(1, 6)]);
-    // }
-
     let search = copy.filter((item) => item.title.includes(_searchTerm));
     setSearchResults(search);
   };
 
+  // multi selection handling for storing ids in selected Items
   const handleSelection = (id,action) => {
     if(action == "add") {
         let list = selectedItems
@@ -174,28 +152,7 @@ export default function Home({ navigation, route }) {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
           >
-            {/* <TouchableOpacity
-                            activeOpacity={0.8}
-                            style={styles.chipItem}
-                        >
-                            <Text style={styles.chipText}>{formattedDate}</Text>
-                        </TouchableOpacity> */}
-            {/* <TouchableOpacity
-                            activeOpacity={0.8}
-                            style={styles.chipItem}
-                        >
-                            <Text style={styles.chipText}>{timeString}</Text>
-                        </TouchableOpacity> */}
-            {/* <TouchableOpacity
-                            activeOpacity={0.8}
-                            style={styles.chipItem}
-                        >
-                            <MaterialCommunityIcons
-                                name="pin"
-                                size={20}
-                                color="black"
-                            />
-                        </TouchableOpacity> */}
+            
             {!isSelecting ? (
               <>
                 <TouchableOpacity
@@ -254,22 +211,11 @@ export default function Home({ navigation, route }) {
                 </TouchableOpacity>
               </>
             )}
-            {/* <TouchableOpacity
-                                activeOpacity={0.8}
-                                style={styles.chipItem}
-                            >
-                                <Ionicons name="school" size={20} color="black" />
-                            </TouchableOpacity> */}
-            {/* <TouchableOpacity
-                            activeOpacity={0.8}
-                            style={styles.chipItem}
-                        >
-                            <Entypo name="code" size={20} color="black" />
-                        </TouchableOpacity> */}
           </ScrollView>
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
+          {/* Message info */}
           {doers.length == 0 && pinnedItems.length == 0 && (
             <Text style={styles.infoText}>
               Your to-doer list is currently empty! {"\n"}
@@ -305,25 +251,9 @@ export default function Home({ navigation, route }) {
                 pinned={item.pinned}
               />
             ))}
+            {/* seperator */}
           {pinnedItems.length != 0 && <View style={styles.separator}></View>}
-          {/* <Text style={styles.viewText}>unPinned</Text> */}
-          {/* other items */}
-          {/* {doers.map((item) => {
-                        if (!item.pinned) {
-                            return (
-                                <Doer
-                                    title={item.title}
-                                    note={item.note}
-                                    navigation={navigation}
-                                    id={item.id}
-                                    key={item.id}
-                                    deletion={handleDeleteDoer}
-                                    starred={item.starred}
-                                    pinned={item.pinned}
-                                />
-                            );
-                        }
-                    })} */}
+          {/* notes/ doers */}
           {!searchedTerm &&
             doers.map((item) => {
               if (!item.pinned) {
@@ -344,7 +274,7 @@ export default function Home({ navigation, route }) {
               }
             })}
 
-          {/* only if the search bar is not empty */}
+          {/*if the search bar is not empty */}
           {searchedTerm &&
             searchResults.map((item) => (
               <Doer
@@ -359,6 +289,7 @@ export default function Home({ navigation, route }) {
               />
             ))}
         </ScrollView>
+        {/* Add Section */}
         <View style={styles.newDoerContainer}>
           <View style={styles.newDoerBar}>
             <Text
@@ -430,7 +361,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#DFE3E6",
     marginRight: 15,
     borderRadius: 11,
-    // padding: 5,
     paddingVertical: 6,
     paddingHorizontal: 9,
   },

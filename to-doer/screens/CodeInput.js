@@ -2,13 +2,10 @@ import { Keyboard, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, Vie
 import { TextInput } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import { useState, useRef, useEffect } from "react";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const CodeInput = ({ navigation }) => {
     const [theme, setTheme] = useState("light");
-    // const [isPinned, setIsPinned] = useState(false);
-    // const [isStarred, setIsStarred] = useState(false);
     const [title, setTitle] = useState("");
     const [code, setCode] = useState("");
     const titleInputRef = useRef(null);
@@ -114,6 +111,7 @@ const CodeInput = ({ navigation }) => {
                             theme == "light" ? "#687076" : "#C6C6C6"
                         }
                     ></TextInput>
+                    {/* title */}
                     <TextInput
                         ref={titleInputRef}
                         style={[
@@ -131,6 +129,7 @@ const CodeInput = ({ navigation }) => {
                             theme == "light" ? "#687076" : "#C6C6C6"
                         }
                     ></TextInput>
+                    {/* code */}
                     <TextInput
                         style={[
                             styles.inputCode,

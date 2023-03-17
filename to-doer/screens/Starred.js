@@ -14,7 +14,6 @@ export default function Starred({ navigation }) {
     const [list, setList] = useState([]);
 
     // get list from async storage
-
     const getData = async () => {
         try {
             const datalist = await AsyncStorage.getItem("@doers");
@@ -28,7 +27,6 @@ export default function Starred({ navigation }) {
         }
     };
 
-    // console.log(list);
     useEffect(() => {
         getData();
     }, []);
