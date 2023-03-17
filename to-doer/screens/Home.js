@@ -72,26 +72,17 @@ export default function Home({ navigation, route }) {
 
   // Update and Edit storing and getting notes
   useEffect(() => {
+    // create
     let newDoer = route.params?.doer;
     if (newDoer) {
       storeData([...doers, newDoer]);
       newDoer = "";
       getData();
     }
+    // update
     let editDoer = route.params?.editDoer;
-    if (editDoer) {
-      let copyDoers = doers;
-      copyDoers.map((doer) => {
-        if (doer.id == editDoer.id) {
-          doer.title = editDoer.title;
-          doer.note = editDoer.note;
-          doer.starred = editDoer.starred;
-          doer.pinned = editDoer.pinned;
-        }
-      });
-
-      storeData(copyDoers);
-      getData();
+    if(editDoer) {
+      updateNote(editDoer)
     }
   }, [route.params]);
 
@@ -122,6 +113,23 @@ export default function Home({ navigation, route }) {
       
     }
   };
+
+  // update note / doer
+  const updateNote =(newNote) => {
+    let _newTemp = doers;
+      _newTemp.map((doer) => {
+        if (doer.id == newNote.id) {
+          doer.title = newNote.title;
+          doer.note = newNote.note;
+          doer.starred = newNote.starred;
+          doer.pinned = newNote.pinned;
+        }
+      });
+
+      storeData(_newTemp);
+      getData();
+
+  }
 
 
   return (
