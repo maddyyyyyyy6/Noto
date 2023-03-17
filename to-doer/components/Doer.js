@@ -1,16 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const Doer = ({ title, note, id, navigation, deletion, starred, pinned }) => {
-    const [bw, setBw] = useState(1);
+const Doer = ({ title, note, id, navigation, deletion, starred, pinned,isSelection,setSelectedList }) => {
+    const [isSelecting,setIsSelecting] = useState(false)
+    const [isSelected,setIsSelected] = useState(false)
+    const [border,setBorder] = useState({
+        width:2,
+        color:"#DFE3E6"
+    })
     const handlePress = () => {
-        setBw(1);
+        if(isSelecting) {
+            // if selection state is true make send id  to the function for adding this to selected list
+            if(!isSelected) {
+                setBorder({
+                    width:3,
+                    color:"gray"
+                })
+                setSelectedList(id,"add")
+                setIsSelected(true)
+            }else{
+                setBorder({
+                    width:2,
+                    color:"#DFE3E6"
+                })
+                setSelectedList(id,"remove")
+                setIsSelected(false)
+                
+            }
 
-        handleViewer(); // Call the onPress event handler
-    };
-    const handleLongPress = () => {
-        setBw(2);
+            
+        }else{
+            handleViewer(); // Call the onPress event handler
+        }
     };
     const handleViewer = () => {
         navigation.navigate("Viewer", {
@@ -24,12 +46,26 @@ const Doer = ({ title, note, id, navigation, deletion, starred, pinned }) => {
             },
         });
     };
+
+    const getData = () => {
+    }
+
+
+    useEffect(() => {
+        setIsSelecting(isSelection)
+        if(!isSelection) {
+            setBorder({
+                width:2,
+                color:"#DFE3E6"
+            })
+        }
+    },[isSelection])
+
     return (
         <TouchableOpacity
-            style={[styles.doerContainer, { borderWidth: bw }]}
+            style={[styles.doerContainer, { borderWidth: border.width,borderColor:border.color }]}
             activeOpacity={0.7}
             onPress={handlePress}
-            onLongPress={handleLongPress}
         >
             <View style={styles.headerContainer}>
                 <Text style={styles.doerTitle}>{title}</Text>
