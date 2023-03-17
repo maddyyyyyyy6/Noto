@@ -10,7 +10,7 @@ import {
 import Doer from "../components/Doer";
 import { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import { EvilIcons } from "@expo/vector-icons";
+import { EvilIcons, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function Home({ navigation, route }) {
@@ -26,6 +26,7 @@ export default function Home({ navigation, route }) {
 
   // for multi selecting
   const [isSelecting, setIsSelecting] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
 
   // for asyncstorage
 
@@ -73,7 +74,7 @@ export default function Home({ navigation, route }) {
 
   const handleMultiDelete = () => {
     let list = doers;
-    let newlist = list.filter((item) => item.selected);
+    let newlist = list.filter((item) => !item.selected);
     storeData(newlist);
     getData();
     setIsSelecting(false);
@@ -128,6 +129,21 @@ export default function Home({ navigation, route }) {
     let search = copy.filter((item) => item.title.includes(_searchTerm));
     setSearchResults(search);
   };
+
+  const handleSelection = (id,action) => {
+    console.log(action, " " ,id)
+    if(action == "add") {
+        let list = selectedItems
+        list.push(id)
+        setSelectedItems(list)
+    }else if(action =="remove") {
+        let list = selectedItems
+        list.pop(id)
+        setSelectedItems(list)
+      
+    }
+  };
+
 
   return (
     <View style={styles.container}>
@@ -201,15 +217,41 @@ export default function Home({ navigation, route }) {
                 >
                   <Text style={styles.chipText}>Codes</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.chipItem}
+                  onPress={() => setIsSelecting(true)}
+                >
+                  <Ionicons
+                    name="md-checkmark-circle"
+                    size={20}
+                    color="#687076"
+                  />
+                </TouchableOpacity>
               </>
             ) : (
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.chipItem}
-                // onPress={() => navigation.navigate("Codes")}
-              >
-                <Text style={styles.chipText}>Delete</Text>
-              </TouchableOpacity>
+              <>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.chipItem}
+                  onPress={() => console.log(selectedItems)}
+                >
+                  <Text style={styles.chipText}>Delete</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.chipItem}
+                  onPress={() => {setSelectedItems([]) 
+                    setIsSelecting(false)}}
+                >
+                  <Ionicons
+                    name="md-close-circle-sharp"
+                    size={20}
+                    color="#687076"
+                  />
+                </TouchableOpacity>
+              </>
             )}
             {/* <TouchableOpacity
                                 activeOpacity={0.8}
@@ -294,6 +336,8 @@ export default function Home({ navigation, route }) {
                     deletion={handleDeleteDoer}
                     starred={item.starred}
                     pinned={item.pinned}
+                    isSelection={isSelecting}
+                    setSelectedList={handleSelection}
                   />
                 );
               }
