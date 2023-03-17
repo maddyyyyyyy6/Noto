@@ -75,7 +75,6 @@ export default function Home({ navigation, route }) {
   const handleDeleteButton = () => {
     let selected = selectedItems
     let list = doers
-    console.log(selected)
     list = list.filter(item => !selected.includes(item.id))
     storeData(list)
     getData()
@@ -134,7 +133,6 @@ export default function Home({ navigation, route }) {
   };
 
   const handleSelection = (id,action) => {
-    console.log(action, " " ,id)
     if(action == "add") {
         let list = selectedItems
         list.push(id)
