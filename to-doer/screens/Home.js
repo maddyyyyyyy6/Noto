@@ -226,9 +226,7 @@ export default function Home({ navigation, route }) {
           {/* Message info */}
           {doers.length == 0 && pinnedItems.length == 0 && (
             <Text style={styles.infoText}>
-              Your to-doer list is currently empty! {"\n"}
-              Let's get started by tapping on{"\n"}
-              New Doer? below!
+              Your list is currently empty! {"\n"}
             </Text>
           )}
           {/* pinned items */}
@@ -405,6 +403,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
     textAlign: "center",
+    color:"#687076"
   },
   buttonExample: {
     backgroundColor: "#DFE3E6",
