@@ -29,6 +29,12 @@ export default function CodeViewer({navigation,route}) {
         let jsonValue = JSON.stringify(data);
         await AsyncStorage.setItem("@codes", jsonValue);
     };
+    const removeCodeFromStorage = async (id) => {
+        let data = storage;
+        let newdata = data.filter(one => one.id != id );
+        let jsonValue = JSON.stringify(newdata);
+        await AsyncStorage.setItem("@codes", jsonValue);
+    };
     const handleSave = () => {
         saveCodeToStorage(id);
         navigation.goBack();
@@ -48,6 +54,13 @@ export default function CodeViewer({navigation,route}) {
         setTitle(ob.title)
         setCode(ob.code)
 
+
+    }
+
+    // delete code
+    const handleDelete =() => {
+        removeCodeFromStorage(id)
+        navigation.goBack()
 
     }
 
@@ -76,6 +89,15 @@ export default function CodeViewer({navigation,route}) {
                             <Text style={styles.buttonText}>Save</Text>
                         </TouchableOpacity>
                     )}
+                    <TouchableOpacity style={styles.headerIcons}>
+                        <AntDesign
+                            name="delete"
+                            size={28}
+                            color="black"
+                            style={{ alignSelf: "center" }}
+                            onPress={handleDelete}
+                        />
+                    </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.headerIcons}
                         onPress={handleTheme}
@@ -164,7 +186,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     headerIcons: {
-        marginLeft: 5,
+        marginLeft: 11,
     },
     NewCodeContainer: {
         flex: 1,
@@ -204,6 +226,7 @@ const styles = StyleSheet.create({
         paddingVertical: 6,
         paddingHorizontal: 9,
         borderRadius: 7,
+        marginLeft:11
     },
     buttonText: {
         fontSize: 15,
