@@ -82,6 +82,14 @@ export default function Codes({ navigation }) {
                     style={styles.notoContainer}
                     showsVerticalScrollIndicator={false}
                 >
+
+                    {
+                        codes.length == 0 && (
+                            <Text style={styles.infoText}>
+                                No Codes Saved!
+                            </Text>
+                        )
+                    }
                     {codes.map((item) => (
                         <Code
                             key={item.id}
@@ -192,4 +200,12 @@ const styles = StyleSheet.create({
         fontWeight: "medium",
         fontFamily: "Inter_400Regular",
     },
+    infoText: {
+        fontFamily: "Inter_400Regular",
+        fontSize: 18,
+        alignSelf: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        color:"#687076"
+      },
 });
