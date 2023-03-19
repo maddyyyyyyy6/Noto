@@ -89,6 +89,7 @@ export default function Codes({ navigation }) {
                             code={item.code}
                             navigation={navigation}
                             language={item.language}
+                            id={item.id}
                         />
                     ))}
                 </ScrollView>

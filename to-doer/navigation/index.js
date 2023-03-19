@@ -5,6 +5,7 @@ import DoerInput from "../screens/DoerInput";
 import Starred from "../screens/Starred";
 import Codes from "../screens/Codes";
 import CodeInput from "../screens/CodeInput";
+import CodeViewer from "../screens/CodeViewer";
 
 const Stack = createStackNavigator();
 
@@ -69,6 +70,13 @@ export default function MyStack() {
             <Stack.Screen
                 name="CodeInput"
                 component={CodeInput}
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="CodeView"
+                component={CodeViewer}
                 options={{
                     headerShown: false,
                 }}

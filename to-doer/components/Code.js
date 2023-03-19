@@ -1,11 +1,17 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 
-export default function Code({ title, code, language }) {
+export default function Code({ title, code, language,navigation,id }) {
+    const handlePress = () => {
+        navigation.navigate("CodeView",{id:id})
+    }
     return (
-        <View style={styles.codeContainer}>
+        <TouchableOpacity activeOpacity={0.9} style={styles.codeContainer} onPress={handlePress} >
             <View style={styles.headerContainer}>
+                <View style={styles.titleContainer}>
+
                 <Text style={styles.headerText}>{title}</Text>
+                </View>
                 <View style={styles.chipLanguage}>
                     <Text style={styles.languageText}>{language}</Text>
                 </View>
@@ -13,7 +19,7 @@ export default function Code({ title, code, language }) {
             <View style={styles.codeViewContainer}>
                 <Text style={styles.codeText}>{code}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 }
 
@@ -50,6 +56,9 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         fontFamily: "Inter_500Medium",
     },
+    titleContainer:{
+        flex:5
+    },
     chipLanguage: {
         backgroundColor: "#DFE3E6",
         alignItems: "center",
@@ -57,6 +66,8 @@ const styles = StyleSheet.create({
         paddingVertical: 2,
         paddingHorizontal: 7,
         borderRadius: 9,
+        flex:1,
+        maxHeight:30
     },
     languageText: {
         fontSize: 11,
