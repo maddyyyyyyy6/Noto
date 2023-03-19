@@ -66,13 +66,13 @@ const DoerInput = ({ navigation }) => {
                         onPress={() => handleBack()}
                     />
                     <Text style={styles.headerText}>New Doer?</Text>
-                    <TouchableOpacity
+                    {(title || note) && <TouchableOpacity
                         style={styles.button}
                         onPress={handleCreate}
                         disabled={!title && !note}
                     >
                         <Text style={styles.buttonText}>Create</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity>}
                     <TouchableOpacity
                         style={styles.headerIcons}
                         onPress={handlePinned}
