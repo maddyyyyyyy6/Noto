@@ -29,7 +29,15 @@ const DoerViewer = ({ route, navigation }) => {
         setNote(newInfo.note);
     };
     const handleBack = () => {
-        navigation.goBack()
+        navigation.navigate("Home", {
+            editDoer: {
+                id: id,
+                title: title,
+                note: note,
+                starred: isStarred,
+                pinned: isPinned,
+            },
+        });
     };
     const handleDelete = () => {
         navigation.goBack();
