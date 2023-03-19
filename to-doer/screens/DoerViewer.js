@@ -15,6 +15,7 @@ const DoerViewer = ({ route, navigation }) => {
     const [title, setTitle] = useState("");
     const [note, setNote] = useState("");
     const [id, setID] = useState("");
+    const [isEditted,setIsEditted] = useState(false)
     const doerInfo = route.params.doer;
     useEffect(() => {
         handleChange();
@@ -28,15 +29,7 @@ const DoerViewer = ({ route, navigation }) => {
         setNote(newInfo.note);
     };
     const handleBack = () => {
-        navigation.navigate("Home", {
-            editDoer: {
-                id: id,
-                title: title,
-                note: note,
-                starred: isStarred,
-                pinned: isPinned,
-            },
-        });
+        navigation.goBack()
     };
     const handleDelete = () => {
         navigation.goBack();
@@ -53,6 +46,18 @@ const DoerViewer = ({ route, navigation }) => {
         if (!isStarred)
             ToastAndroid.show("You Starred a note", ToastAndroid.SHORT);
     };
+
+    const handleSave =() => {
+        navigation.navigate("Home", {
+            editDoer: {
+                id: id,
+                title: title,
+                note: note,
+                starred: isStarred,
+                pinned: isPinned,
+            },
+        });
+    }
     return (
         <View style={styles.container}>
             <View style={styles.InputContainer}>
@@ -68,6 +73,14 @@ const DoerViewer = ({ route, navigation }) => {
                         />
                     </TouchableOpacity>
                     <Text style={styles.headerText}>Edit Doer</Text>
+                    {isEditted &&  (
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={handleSave}
+                        >
+                            <Text style={styles.buttonText}>Save</Text>
+                        </TouchableOpacity>
+                    )}
                     <TouchableOpacity
                         style={styles.headerIcons}
                         onPress={handlePinClick}
@@ -109,6 +122,7 @@ const DoerViewer = ({ route, navigation }) => {
                         textAlignVertical="top"
                         maxLength={100}
                         onChangeText={setTitle}
+                        onChange={() => setIsEditted(true)}
                         value={title}
                     ></TextInput>
                     <TextInput
@@ -118,6 +132,8 @@ const DoerViewer = ({ route, navigation }) => {
                         numberOfLines={11}
                         textAlignVertical="top"
                         onChangeText={setNote}
+                        onChange={() => setIsEditted(true)}
+
                         value={note}
                     ></TextInput>
                 </View>
@@ -178,5 +194,15 @@ const styles = StyleSheet.create({
     inputNote: {
         fontFamily: "Inter_400Regular",
         fontSize: 15,
+    },button: {
+        backgroundColor: "#DFE3E6",
+        paddingVertical: 6,
+        paddingHorizontal: 9,
+        borderRadius: 7,
+        marginLeft:11
+    },
+    buttonText: {
+        fontSize: 15,
+        fontFamily: "Inter_500Medium",
     },
 });
