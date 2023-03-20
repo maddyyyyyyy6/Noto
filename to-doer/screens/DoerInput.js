@@ -47,7 +47,7 @@ const DoerInput = ({ navigation }) => {
 
     const getData  = async() => {
         const data = await AsyncStorage.getItem("@doers");
-        const dataJson = JSON.parse(data)
+        const dataJson = JSON.parse(data) || []
         setStorage(dataJson)
     }
 
