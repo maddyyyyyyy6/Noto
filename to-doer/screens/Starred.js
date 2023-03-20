@@ -12,6 +12,7 @@ import Doer from "../components/Doer";
 export default function Starred({ navigation }) {
     const [isStarred, setIsStarred] = useState(false);
     const [list, setList] = useState([]);
+    const [isSelecting,setIsSelecting] = useState(false)
 
     // get list from async storage
     const getData = async () => {
@@ -27,6 +28,11 @@ export default function Starred({ navigation }) {
         }
     };
 
+    const handleStarButton = () => {
+        setIsStarred(true)
+        setIsSelecting(true)
+    }
+
     useEffect(() => {
         getData();
     }, []);
@@ -36,18 +42,22 @@ export default function Starred({ navigation }) {
             <View style={styles.StarredContainer}>
                 {/* Header */}
                 <View style={styles.headerContainer}>
-                    <TouchableOpacity>
+                    <TouchableOpacity 
+                            onPress={() => navigation.goBack()}
+
+                    >
                         <AntDesign
                             name="arrowleft"
                             size={28}
                             color="black"
                             style={{ marginRight: 10 }}
-                            onPress={() => navigation.goBack()}
                         />
                     </TouchableOpacity>
                     <Text style={styles.headerText}>Starred</Text>
 
-                    <TouchableOpacity style={styles.headerIcons}>
+                    <TouchableOpacity style={styles.headerIcons}
+                    onPress={() => handleStarButton()}
+                    >
                         <AntDesign
                             name={isStarred ? "star" : "staro"}
                             size={28}
@@ -68,6 +78,7 @@ export default function Starred({ navigation }) {
                             title={item.title}
                             note={item.note}
                             navigation={navigation}
+                            id={item.id}
                         />
                     ))}
                 </ScrollView>
