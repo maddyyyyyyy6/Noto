@@ -6,6 +6,7 @@ import {
   View,
   ScrollView,
   StatusBar,
+  Vibration,
 } from "react-native";
 import Doer from "../components/Doer";
 import { useState, useEffect } from "react";
@@ -79,6 +80,7 @@ export default function Home({ navigation, route }) {
     storeData(list)
     getData()
     setIsSelecting(false)
+    vibrate()
 
   };
 
@@ -138,6 +140,9 @@ export default function Home({ navigation, route }) {
       getData();
 
   }
+  const vibrate = () => {
+    Vibration.vibrate(1*50)
+  }
 
 
   return (
@@ -174,7 +179,10 @@ export default function Home({ navigation, route }) {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={[styles.chipItem, styles.chipSelecteds]}
-                  onPress={() => navigation.navigate("Starred")}
+                  onPress={() => {
+                    navigation.navigate("Starred") 
+                    vibrate()
+                  }}
                 >
                   {/* <AntDesign
                     name="staro"
@@ -188,7 +196,11 @@ export default function Home({ navigation, route }) {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.chipItem}
-                  onPress={() => navigation.navigate("Codes")}
+                  onPress={() => {
+                    navigation.navigate("Codes")
+                    vibrate()
+                  }}
+
                 >
                   <Text style={styles.chipText}>Codes</Text>
                 </TouchableOpacity>
@@ -196,7 +208,10 @@ export default function Home({ navigation, route }) {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.chipItem}
-                  onPress={() => setIsSelecting(true)}
+                  onPress={() => {
+                    setIsSelecting(true)
+                                    vibrate()
+                                  }}
                 >
                   <Ionicons
                     name="md-checkmark-circle"
@@ -218,7 +233,8 @@ export default function Home({ navigation, route }) {
                   activeOpacity={0.8}
                   style={styles.chipItem}
                   onPress={() => {setSelectedItems([]) 
-                    setIsSelecting(false)}}
+                    setIsSelecting(false)
+                  vibrate()}}
                 >
                   <Ionicons
                     name="md-close-circle-sharp"
