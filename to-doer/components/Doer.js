@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, Vibration, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Doer = ({ title, note, id, navigation, starred, pinned,isSelection,setSelectedList }) => {
@@ -36,9 +36,15 @@ const Doer = ({ title, note, id, navigation, starred, pinned,isSelection,setSele
     };
     const handleViewer = () => {
         navigation.navigate("Viewer",{id:id});
+        vibrate()
     };
 
     const getData = () => {
+    }
+
+    // for vibration
+    const vibrate= () => {
+        Vibration.vibrate(1 * 30)
     }
 
 
