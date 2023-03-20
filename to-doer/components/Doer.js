@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const Doer = ({ title, note, id, navigation, deletion, starred, pinned,isSelection,setSelectedList }) => {
+const Doer = ({ title, note, id, navigation, starred, pinned,isSelection,setSelectedList }) => {
     const [isSelecting,setIsSelecting] = useState(false)
     const [isSelected,setIsSelected] = useState(false)
     const [border,setBorder] = useState({
@@ -35,16 +35,7 @@ const Doer = ({ title, note, id, navigation, deletion, starred, pinned,isSelecti
         }
     };
     const handleViewer = () => {
-        navigation.navigate("Viewer", {
-            doer: {
-                title: title,
-                note: note,
-                id: id,
-                deletion: deletion,
-                starred: starred,
-                pinned: pinned,
-            },
-        });
+        navigation.navigate("Viewer",{id:id});
     };
 
     const getData = () => {

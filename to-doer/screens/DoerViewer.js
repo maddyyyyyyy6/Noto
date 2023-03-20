@@ -4,68 +4,100 @@ import {
     StyleSheet,
     TouchableOpacity,
     ToastAndroid,
+    Keyboard,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const DoerViewer = ({ route, navigation }) => {
+    const id = route.params?.id
+    const [storage,setStorage] = useState([])
     const [isPinned, setIsPinned] = useState(false);
     const [isStarred, setIsStarred] = useState(false);
     const [title, setTitle] = useState("");
     const [note, setNote] = useState("");
-    const [id, setID] = useState("");
     const [isEditted,setIsEditted] = useState(false)
-    const doerInfo = route.params.doer;
-    useEffect(() => {
-        handleChange();
-    }, [route.params.doer]);
-    const handleChange = () => {
-        const newInfo = route.params.doer;
-        setIsPinned(newInfo.pinned);
-        setIsStarred(newInfo.starred);
-        setTitle(newInfo.title);
-        setID(newInfo.id);
-        setNote(newInfo.note);
-    };
+    
     const handleBack = () => {
-        navigation.navigate("Home", {
-            editDoer: {
-                id: id,
-                title: title,
-                note: note,
-                starred: isStarred,
-                pinned: isPinned,
-            },
-        });
+        navigation.goBack()
     };
     const handleDelete = () => {
+        let data = storage
+        const dataNew= data.filter(item => item.id != id)
+        saveToStorage(dataNew)
         navigation.goBack();
-        doerInfo.deletion(id);
     };
 
     const handlePinClick = () => {
-        setIsPinned(!isPinned);
-        if (!isPinned)
+        setIsPinned(!isPinned); // function change
+        let data = storage
+        data.map(item => {
+            if(item.id == id) {
+                item.pinned = !isPinned
+            }
+        })
+        saveToStorage(data)
+        if (!isPinned){
             ToastAndroid.show("You pinned a note", ToastAndroid.SHORT);
+
+        }
     };
     const handleStarred = () => {
         setIsStarred(!isStarred);
+        let data = storage
+        data.map(item => {
+            if(item.id == id) {
+                item.starred = !isStarred
+            }
+        })
+        saveToStorage(data)
         if (!isStarred)
             ToastAndroid.show("You Starred a note", ToastAndroid.SHORT);
     };
 
     const handleSave =() => {
-        navigation.navigate("Home", {
-            editDoer: {
-                id: id,
-                title: title,
-                note: note,
-                starred: isStarred,
-                pinned: isPinned,
-            },
-        });
+        let data = storage
+        data.map(item => {
+            if(item.id == id) {
+                item.title = title
+                item.note = note
+                item.pinned = isPinned
+                item.starred = isStarred
+            }
+        })
+        saveToStorage(data)
+        Keyboard.dismiss()
+        navigation.navigate("Home",{edit:"yes"})
     }
+
+    const saveToStorage = async (_storage) => {
+        const _storageJson = JSON.stringify(_storage)
+        await AsyncStorage.setItem("@doers",_storageJson)
+
+    }
+    const getData = async() => {
+        let data = await AsyncStorage.getItem("@doers")
+        let dataJson = JSON.parse(data)
+        setStorage(dataJson)
+        getCurrent(id,dataJson)
+    }
+
+    const getCurrent = (id,storage) => {
+        let _current_doer = storage.filter(item => item.id == id)
+        let _current = _current_doer[0]
+        setTitle(_current?.title)
+        setNote(_current?.note)
+        setIsPinned(_current?.pinned)
+        setIsStarred(_current?.starred)
+        
+    }
+
+    useEffect(() => {
+        getData()
+        
+    },[id])
     return (
         <View style={styles.container}>
             <View style={styles.InputContainer}>

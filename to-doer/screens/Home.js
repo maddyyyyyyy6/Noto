@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { EvilIcons, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function Home({ navigation, route }) {
   const [doers, setDoers] = useState([]);
@@ -22,6 +23,10 @@ export default function Home({ navigation, route }) {
   // for multi selecting
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
+
+  // Refreshing on Focus
+  const isFocused = useIsFocused();
+
 
   // for asyncstorage
   const storeData = async (doers) => {
@@ -51,6 +56,13 @@ export default function Home({ navigation, route }) {
     getData();
   }, []);
 
+  useEffect(() => {
+    if (isFocused) {
+        // Fetch data or trigger any function here
+        getData();
+    }
+}, [isFocused]);
+
   // effect when user typed in search if empty no change
   useEffect(() => {
     handleSearch(searchedTerm);
@@ -79,11 +91,7 @@ export default function Home({ navigation, route }) {
       newDoer = "";
       getData();
     }
-    // update
-    let editDoer = route.params?.editDoer;
-    if(editDoer) {
-      updateNote(editDoer)
-    }
+    
   }, [route.params]);
 
   // delete from doerEdit
@@ -168,12 +176,13 @@ export default function Home({ navigation, route }) {
                   style={[styles.chipItem, styles.chipSelecteds]}
                   onPress={() => navigation.navigate("Starred")}
                 >
-                  <AntDesign
+                  {/* <AntDesign
                     name="staro"
                     size={20}
                     color="#687076"
                     style={{ alignSelf: "center" }}
-                  />
+                  /> */}
+                  <Text style={styles.chipText}>Favourites</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
