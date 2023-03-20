@@ -83,16 +83,16 @@ export default function Home({ navigation, route }) {
   };
 
   // Update and Edit storing and getting notes
-  useEffect(() => {
-    // create
-    let newDoer = route.params?.doer;
-    if (newDoer) {
-      storeData([...doers, newDoer]);
-      newDoer = "";
-      getData();
-    }
+  // useEffect(() => {
+  //   // create
+  //   let newDoer = route.params?.doer;
+  //   if (newDoer) {
+  //     storeData([...doers, newDoer]);
+  //     newDoer = "";
+  //     getData();
+  //   }
     
-  }, [route.params]);
+  // }, [route.params]);
 
   // delete from doerEdit
   const handleDeleteDoer = (id) => {

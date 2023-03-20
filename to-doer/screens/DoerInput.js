@@ -1,9 +1,11 @@
 import { StyleSheet, Text, TouchableOpacity, View,Keyboard } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextInput } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import { useState, useRef, useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 const DoerInput = ({ navigation }) => {
+    const [storage,setStorage] = useState([])
     const [isPinned, setIsPinned] = useState(false);
     const [isStarred, setIsStarred] = useState(false);
     const [title, setTitle] = useState("");
@@ -24,6 +26,32 @@ const DoerInput = ({ navigation }) => {
 
     // for handling the create button functionality
     const handleCreate = () => {
+        CreateDoer()
+        navigation.goBack()
+        Keyboard.dismiss()
+
+        // if (title) {
+        //     CreateDoer()
+        //     navigation.goBack()
+        // } else if (note) {
+        //     CreateDoer()
+        //     navigation.goBack()
+        //     Keyboard.dismiss()
+
+        // } else {
+        //     //
+        //     Keyboard.dismiss()
+
+        // }
+    };
+
+    const getData  = async() => {
+        const data = await AsyncStorage.getItem("@doers");
+        const dataJson = JSON.parse(data)
+        setStorage(dataJson)
+    }
+
+    const CreateDoer = () => {
         const data = {
             title: title,
             note: note,
@@ -32,27 +60,21 @@ const DoerInput = ({ navigation }) => {
             pinned: isPinned,
             selected:false
         }
-        if (title) {
-            navigation.navigate("Home", {
-                doer: data
-            });
-            Keyboard.dismiss()
-        } else if (note) {
-            navigation.navigate("Home", {
-                doer: data
-            });
-            Keyboard.dismiss()
+        let dataPrevious = storage
+        dataPrevious.push(data)
+        saveToStorage(dataPrevious)
 
-        } else {
-            //
-            Keyboard.dismiss()
+    }
 
-        }
-    };
+    const saveToStorage = async (_storage) => {
+        const _storageString = JSON.stringify(_storage)
+        await AsyncStorage.setItem("@doers",_storageString)
+    }
 
     useEffect(() => {
         titleInputRef.current?.focus();
-    }, []);
+        getData()
+    },[])
     return (
         <View style={styles.container}>
             <View style={styles.InputContainer}>
