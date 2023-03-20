@@ -64,6 +64,7 @@ export default function Starred({ navigation }) {
                     )}
                     {list.map((item) => (
                         <Doer
+                            key={item.id}
                             title={item.title}
                             note={item.note}
                             navigation={navigation}
