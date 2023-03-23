@@ -121,6 +121,15 @@ export default function Todoer({navigation}) {
         </View>
         {/* list */}
         <ScrollView showsVerticalScrollIndicator={false}>
+          {/* empty list info text */}
+          {/* {
+            TODOS && <View style={[styles.chipItem,{backgroundColor:getTrackColor()}]}>
+              <Text style={[styles.chipText,{color:getNewBarTextColor()}]}>
+                {track} list is empty
+              </Text>
+            </View>
+          } */}
+          
           {TODOS.map((item) => {
             if (item.state == track) {
               return (
@@ -130,6 +139,7 @@ export default function Todoer({navigation}) {
                   title={item.title}
                   text={item.text}
                   state={item.state}
+                  navigation={navigation}
                 />
               );
             }
