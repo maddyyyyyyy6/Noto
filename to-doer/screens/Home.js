@@ -204,6 +204,17 @@ export default function Home({ navigation, route }) {
                 >
                   <Text style={styles.chipText}>Codes</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.chipItem}
+                  onPress={() => {
+                    navigation.navigate("Todoer")
+                    vibrate()
+                  }}
+
+                >
+                  <Text style={styles.chipText}>Todoer</Text>
+                </TouchableOpacity>
 
                 <TouchableOpacity
                   activeOpacity={0.8}
