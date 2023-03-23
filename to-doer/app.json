@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "to-doer",
-    "slug": "to-doer",
-    "version": "1.0.0",
+    "name": "Noto",
+    "slug": "noto",
+    "version": "1.1.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -22,14 +22,13 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "maddycoder.projects.todo"
+      "package": "maddycoder.projects.noto"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "8e0e658d-67a4-412d-97ad-6611632f4121"
       }
     }
   }
