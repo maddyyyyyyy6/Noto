@@ -8,16 +8,16 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Doer from "../components/Doer";
+import Note from "../components/Note";
 export default function Starred({ navigation }) {
     const [isStarred, setIsStarred] = useState(false);
     const [list, setList] = useState([]);
+    const [isSelecting,setIsSelecting] = useState(false)
 
     // get list from async storage
-
     const getData = async () => {
         try {
-            const datalist = await AsyncStorage.getItem("@doers");
+            const datalist = await AsyncStorage.getItem("@notes");
             const data = JSON.parse(datalist) || [];
 
             // sort it by starred
@@ -28,7 +28,11 @@ export default function Starred({ navigation }) {
         }
     };
 
-    // console.log(list);
+    const handleStarButton = () => {
+        setIsStarred(true)
+        setIsSelecting(true)
+    }
+
     useEffect(() => {
         getData();
     }, []);
@@ -38,18 +42,22 @@ export default function Starred({ navigation }) {
             <View style={styles.StarredContainer}>
                 {/* Header */}
                 <View style={styles.headerContainer}>
-                    <TouchableOpacity>
+                    <TouchableOpacity 
+                            onPress={() => navigation.goBack()}
+
+                    >
                         <AntDesign
                             name="arrowleft"
                             size={28}
                             color="black"
                             style={{ marginRight: 10 }}
-                            onPress={() => navigation.goBack()}
                         />
                     </TouchableOpacity>
                     <Text style={styles.headerText}>Starred</Text>
 
-                    <TouchableOpacity style={styles.headerIcons}>
+                    <TouchableOpacity style={styles.headerIcons}
+                    onPress={() => handleStarButton()}
+                    >
                         <AntDesign
                             name={isStarred ? "star" : "staro"}
                             size={28}
@@ -65,10 +73,12 @@ export default function Starred({ navigation }) {
                         </Text>
                     )}
                     {list.map((item) => (
-                        <Doer
+                        <Note
+                            key={item.id}
                             title={item.title}
                             note={item.note}
                             navigation={navigation}
+                            id={item.id}
                         />
                     ))}
                 </ScrollView>

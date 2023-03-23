@@ -1,76 +1,103 @@
-import {
-    View,
-    Text,
-    StyleSheet,
-    TouchableOpacity,
-    ToastAndroid,
-} from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { StyleSheet, Text, TouchableOpacity, View,Keyboard } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextInput } from "react-native-gesture-handler";
+import { AntDesign } from "@expo/vector-icons";
+import { useState, useRef, useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useState, useEffect } from "react";
-const DoerViewer = ({ route, navigation }) => {
+const NoteInput = ({ navigation }) => {
+    const [storage,setStorage] = useState([])
     const [isPinned, setIsPinned] = useState(false);
     const [isStarred, setIsStarred] = useState(false);
     const [title, setTitle] = useState("");
     const [note, setNote] = useState("");
-    const [id, setID] = useState("");
-    const doerInfo = route.params.doer;
-    useEffect(() => {
-        handleChange();
-    }, [route.params.doer]);
-    const handleChange = () => {
-        const newInfo = route.params.doer;
-        setIsPinned(newInfo.pinned);
-        setIsStarred(newInfo.starred);
-        setTitle(newInfo.title);
-        setID(newInfo.id);
-        setNote(newInfo.note);
-    };
-    const handleBack = () => {
-        navigation.navigate("Home", {
-            editDoer: {
-                id: id,
-                title: title,
-                note: note,
-                starred: isStarred,
-                pinned: isPinned,
-            },
-        });
-    };
-    const handleDelete = () => {
-        navigation.goBack();
-        doerInfo.deletion(id);
-    };
+    const titleInputRef = useRef(null);
 
-    const handlePinClick = () => {
+    const now = new Date();
+    const id = now.getTime();
+    const handleBack = () => {
+        navigation.goBack();
+    };
+    const handlePinned = () => {
         setIsPinned(!isPinned);
-        if (!isPinned)
-            ToastAndroid.show("You pinned a note", ToastAndroid.SHORT);
     };
     const handleStarred = () => {
         setIsStarred(!isStarred);
-        if (!isStarred)
-            ToastAndroid.show("You Starred a note", ToastAndroid.SHORT);
     };
+
+    // for handling the create button functionality
+    const handleCreate = () => {
+        CreateNote()
+        navigation.goBack()
+        Keyboard.dismiss()
+
+        // if (title) {
+        //     CreateNote()
+        //     navigation.goBack()
+        // } else if (note) {
+        //     CreateNote()
+        //     navigation.goBack()
+        //     Keyboard.dismiss()
+
+        // } else {
+        //     //
+        //     Keyboard.dismiss()
+
+        // }
+    };
+
+    const getData  = async() => {
+        const data = await AsyncStorage.getItem("@notes");
+        const dataJson = JSON.parse(data) || []
+        setStorage(dataJson)
+    }
+
+    const CreateNote = () => {
+        const data = {
+            title: title,
+            note: note,
+            id: id,
+            starred: isStarred,
+            pinned: isPinned,
+            selected:false
+        }
+        let dataPrevious = storage
+        dataPrevious.push(data)
+        saveToStorage(dataPrevious)
+
+    }
+
+    const saveToStorage = async (_storage) => {
+        const _storageString = JSON.stringify(_storage)
+        await AsyncStorage.setItem("@notes",_storageString)
+    }
+
+    useEffect(() => {
+        titleInputRef.current?.focus();
+        getData()
+    },[])
     return (
         <View style={styles.container}>
             <View style={styles.InputContainer}>
                 {/* Header */}
                 <View style={styles.headerContainer}>
-                    <TouchableOpacity>
-                        <AntDesign
-                            name="arrowleft"
-                            size={28}
-                            color="black"
-                            style={{ marginRight: 10 }}
-                            onPress={handleBack}
-                        />
-                    </TouchableOpacity>
-                    <Text style={styles.headerText}>Edit Doer</Text>
+                    <AntDesign
+                        name="arrowleft"
+                        size={28}
+                        color="black"
+                        style={{ marginRight: 10 }}
+                        onPress={() => handleBack()}
+                    />
+                    <Text style={styles.headerText}>New Note?</Text>
+                    {(title || note) && <TouchableOpacity
+                        style={styles.button}
+                        onPress={handleCreate}
+                        disabled={!title && !note}
+                    >
+                        <Text style={styles.buttonText}>Create</Text>
+                    </TouchableOpacity>}
                     <TouchableOpacity
                         style={styles.headerIcons}
-                        onPress={handlePinClick}
+                        onPress={handlePinned}
                     >
                         <MaterialCommunityIcons
                             name={isPinned ? "pin-off" : "pin"}
@@ -89,19 +116,11 @@ const DoerViewer = ({ route, navigation }) => {
                             style={{ alignSelf: "center" }}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.headerIcons}>
-                        <AntDesign
-                            name="delete"
-                            size={28}
-                            color="black"
-                            style={{ alignSelf: "center" }}
-                            onPress={handleDelete}
-                        />
-                    </TouchableOpacity>
                 </View>
                 {/* Input */}
-                <View style={styles.NewDoerContainer}>
+                <View style={styles.NewNoteContainer}>
                     <TextInput
+                        ref={titleInputRef}
                         style={styles.inputTitle}
                         placeholder="Title"
                         multiline={true}
@@ -125,8 +144,8 @@ const DoerViewer = ({ route, navigation }) => {
         </View>
     );
 };
+export default NoteInput;
 
-export default DoerViewer;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -156,7 +175,7 @@ const styles = StyleSheet.create({
     headerIcons: {
         marginLeft: 5,
     },
-    NewDoerContainer: {
+    NewNoteContainer: {
         flex: 1,
         width: "100%",
         borderWidth: 1,
@@ -178,5 +197,15 @@ const styles = StyleSheet.create({
     inputNote: {
         fontFamily: "Inter_400Regular",
         fontSize: 15,
+    },
+    button: {
+        backgroundColor: "#DFE3E6",
+        paddingVertical: 6,
+        paddingHorizontal: 9,
+        borderRadius: 7,
+    },
+    buttonText: {
+        fontSize: 15,
+        fontFamily: "Inter_500Medium",
     },
 });
