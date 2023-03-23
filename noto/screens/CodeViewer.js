@@ -1,22 +1,16 @@
 import { Keyboard, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
-import { useState, useRef, useEffect } from "react";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useState, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const CodeInput = ({ navigation }) => {
-    const [theme, setTheme] = useState("light");
-    // const [isPinned, setIsPinned] = useState(false);
-    // const [isStarred, setIsStarred] = useState(false);
+export default function CodeViewer({navigation,route}) {
+    const id = route.params?.id
+    const [storage,setStorage] = useState([])
+    const [theme, setTheme] = useState("dark");
     const [title, setTitle] = useState("");
     const [code, setCode] = useState("");
-    const titleInputRef = useRef(null);
-    const [storage, setStorage] = useState("");
-    const [language, setLanguage] = useState("");
 
-    const now = new Date();
-    const id = now.getTime();
     const handleBack = () => {
         navigation.goBack();
     };
@@ -24,20 +18,25 @@ const CodeInput = ({ navigation }) => {
         setTheme(theme == "light" ? "dark" : "light");
     };
 
-    const saveCodeToStorage = async () => {
-        let codeStructure = {
-            title: title,
-            code: code,
-            id: id,
-            language: language || "unknown",
-        };
+    const saveCodeToStorage = async (id) => {
         let data = storage;
-        data.push(codeStructure);
+        data.map(one => {
+            if(one.id == id) {
+                one.title = title
+                one.code = code
+            }
+        });
         let jsonValue = JSON.stringify(data);
         await AsyncStorage.setItem("@codes", jsonValue);
     };
-    const handleCreate = () => {
-        saveCodeToStorage();
+    const removeCodeFromStorage = async (id) => {
+        let data = storage;
+        let newdata = data.filter(one => one.id != id );
+        let jsonValue = JSON.stringify(newdata);
+        await AsyncStorage.setItem("@codes", jsonValue);
+    };
+    const handleSave = () => {
+        saveCodeToStorage(id);
         navigation.goBack();
         Keyboard.dismiss()
     };
@@ -46,12 +45,28 @@ const CodeInput = ({ navigation }) => {
         const data = await AsyncStorage.getItem("@codes");
         const jsonValue = JSON.parse(data) || [];
         setStorage(jsonValue);
+        getCurrent(id,jsonValue)
+        
     };
+    const getCurrent = (id,storage) => {
+        let copy = storage.filter(item =>  item.id == id)
+        let ob = copy[0]
+        setTitle(ob.title)
+        setCode(ob.code)
+
+
+    }
+
+    // delete code
+    const handleDelete =() => {
+        removeCodeFromStorage(id)
+        navigation.goBack()
+
+    }
 
     useEffect(() => {
-        titleInputRef.current?.focus();
         getData();
-    }, []);
+    }, [id]);
     return (
         <View style={styles.container}>
             <View style={styles.InputContainer}>
@@ -68,12 +83,21 @@ const CodeInput = ({ navigation }) => {
                     {title && code && (
                         <TouchableOpacity
                             style={styles.button}
-                            onPress={handleCreate}
+                            onPress={handleSave}
                             disabled={!title && !code}
                         >
-                            <Text style={styles.buttonText}>Create</Text>
+                            <Text style={styles.buttonText}>Save</Text>
                         </TouchableOpacity>
                     )}
+                    <TouchableOpacity style={styles.headerIcons}>
+                        <AntDesign
+                            name="delete"
+                            size={28}
+                            color="black"
+                            style={{ alignSelf: "center" }}
+                            onPress={handleDelete}
+                        />
+                    </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.headerIcons}
                         onPress={handleTheme}
@@ -96,26 +120,8 @@ const CodeInput = ({ navigation }) => {
                     ]}
                 >
                     {/* ask for which language */}
-
+                    {/* title */}
                     <TextInput
-                        ref={titleInputRef}
-                        style={[
-                            styles.inputCodeLanguage,
-                            { color: theme == "light" ? "#687076" : "#C6C6C6" },
-                        ]}
-                        placeholder="language?"
-                        multiline={true}
-                        numberOfLines={2}
-                        textAlignVertical="top"
-                        maxLength={100}
-                        onChangeText={setLanguage}
-                        value={language}
-                        placeholderTextColor={
-                            theme == "light" ? "#687076" : "#C6C6C6"
-                        }
-                    ></TextInput>
-                    <TextInput
-                        ref={titleInputRef}
                         style={[
                             styles.inputCodeTitle,
                             { color: theme == "light" ? "#687076" : "#C6C6C6" },
@@ -131,12 +137,13 @@ const CodeInput = ({ navigation }) => {
                             theme == "light" ? "#687076" : "#C6C6C6"
                         }
                     ></TextInput>
+                    {/* code */}
                     <TextInput
                         style={[
                             styles.inputCode,
                             { color: theme == "light" ? "#687076" : "#C6C6C6" },
                         ]}
-                        placeholder="Code your preferred language"
+                        placeholder="Code in your preferred language"
                         multiline={true}
                         numberOfLines={11}
                         textAlignVertical="top"
@@ -149,9 +156,9 @@ const CodeInput = ({ navigation }) => {
                 </View>
             </View>
         </View>
-    );
-};
-export default CodeInput;
+    )
+}
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -179,7 +186,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     headerIcons: {
-        marginLeft: 5,
+        marginLeft: 11,
     },
     NewCodeContainer: {
         flex: 1,
@@ -219,6 +226,7 @@ const styles = StyleSheet.create({
         paddingVertical: 6,
         paddingHorizontal: 9,
         borderRadius: 7,
+        marginLeft:11
     },
     buttonText: {
         fontSize: 15,

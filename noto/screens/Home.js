@@ -6,20 +6,17 @@ import {
   View,
   ScrollView,
   StatusBar,
+  Vibration,
 } from "react-native";
-import Doer from "../components/Doer";
+import Note from "../components/Note";
 import { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { EvilIcons, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function Home({ navigation, route }) {
-  const [doers, setDoers] = useState([]);
-  // const [currentDate, setCurrentDate] = useState(new Date());
-  // const [showStarred, setShowStarred] = useState(false);
-  // const timeString = currentDate.toLocaleTimeString();
-  // const options = { day: "numeric", month: "long", year: "numeric" };
-  // const formattedDate = currentDate.toLocaleDateString("en-US", options);
+  const [notes, setNotes] = useState([]);
   const [pinnedItems, setPinnedItems] = useState([]);
   const [searchedTerm, setSearchedTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -28,125 +25,119 @@ export default function Home({ navigation, route }) {
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
 
-  // for asyncstorage
+  // Refreshing on Focus
+  const isFocused = useIsFocused();
 
-  const storeData = async (doers) => {
+  // for asyncstorage
+  const storeData = async (notes) => {
     try {
-      const jsonValue = JSON.stringify(doers);
-      await AsyncStorage.setItem("@doers", jsonValue);
+      const jsonValue = JSON.stringify(notes);
+      await AsyncStorage.setItem("@notes", jsonValue);
     } catch (e) {
       // saving error
     }
   };
 
-  // getting data
-
+  // getting notes list from Asyncstorage
   const getData = async () => {
     try {
-      const jsonValue = await AsyncStorage.getItem("@doers");
+      const jsonValue = await AsyncStorage.getItem("@notes");
       const data = JSON.parse(jsonValue) || [];
+      // for sorting pinned notes
       const sortpinned = data.filter((item) => item.pinned);
       setPinnedItems(sortpinned);
-      setDoers(data);
+      setNotes(data);
     } catch (e) {
       // error reading value
     }
   };
-
+  // getData at startup
   useEffect(() => {
     getData();
   }, []);
 
-  // for search term update when user typed something in the search bar
+  useEffect(() => {
+    if (isFocused) {
+      // Fetch data or trigger any function here
+      getData();
+    }
+  }, [isFocused]);
+
+  // effect when user typed in search if empty no change
   useEffect(() => {
     handleSearch(searchedTerm);
   }, [searchedTerm]);
 
-  // useEffect(() => {
-  //     const interval = setInterval(() => {
-  //         setCurrentDate(new Date());
-  //     }, 1000);
-  //     return () => clearInterval(interval);
-  // }, []);
-
   // for selection functions
-  // delete
 
+  // delete Button bulk selection
   const handleDeleteButton = () => {
-    let selected = selectedItems
-    let list = doers
-    console.log(selected)
-    list = list.filter(item => !selected.includes(item.id))
-    storeData(list)
-    getData()
-    setIsSelecting(false)
-
+    let selected = selectedItems;
+    let list = Notes;
+    list = list.filter((item) => !selected.includes(item.id));
+    storeData(list);
+    getData();
+    setIsSelecting(false);
+    vibrate();
   };
 
-  useEffect(() => {
-    let newDoer = route.params?.doer;
-    if (newDoer) {
-      storeData([...doers, newDoer]);
-      newDoer = "";
-      getData();
-    }
-    let editDoer = route.params?.editDoer;
-    if (editDoer) {
-      let copyDoers = doers;
-      copyDoers.map((doer) => {
-        if (doer.id == editDoer.id) {
-          doer.title = editDoer.title;
-          doer.note = editDoer.note;
-          doer.starred = editDoer.starred;
-          doer.pinned = editDoer.pinned;
-        }
-      });
+  // Update and Edit storing and getting notes
+  // useEffect(() => {
+  //   // create
+  //   let newNote = route.params?.Note;
+  //   if (newNote) {
+  //     storeData([...Notes, newNote]);
+  //     newNote = "";
+  //     getData();
+  //   }
 
-      // setDoers(copyDoers);
-      storeData(copyDoers);
-      getData();
-    }
-  }, [route.params]);
+  // }, [route.params]);
 
-  const handleDeleteDoer = (id) => {
-    const updateDoers = doers.filter((one) => one.id != id);
-    // setDoers(updateDoers);
-    storeData(updateDoers);
+  // delete from NoteEdit
+  const handleDeleteNote = (id) => {
+    const updateNotes = notes.filter((one) => one.id != id);
+    storeData(updateNotes);
     getData();
   };
 
   // search handling function
   const handleSearch = (_searchTerm) => {
-    let copy = doers;
-
-    // if(searchTerm.length > 0) {
-    // for (i = 0; i < len; i++) {
-    //     let search = copy.filter(
-    //         (item) => item.title[(1, 2)] == _searchTerm[i]
-    //     );
-    // }
-    // for (i = 0; i < len; i++) {
-    // console.log(_searchTerm[(1, 6)]);
-    // }
-
+    let copy = notes;
     let search = copy.filter((item) => item.title.includes(_searchTerm));
     setSearchResults(search);
   };
 
-  const handleSelection = (id,action) => {
-    console.log(action, " " ,id)
-    if(action == "add") {
-        let list = selectedItems
-        list.push(id)
-        setSelectedItems(list)
-    }else if(action =="remove") {
-        let list = selectedItems
-        list.pop(id)
-        setSelectedItems(list)
-      
+  // multi selection handling for storing ids in selected Items
+  const handleSelection = (id, action) => {
+    if (action == "add") {
+      let list = selectedItems;
+      list.push(id);
+      setSelectedItems(list);
+    } else if (action == "remove") {
+      let list = selectedItems;
+      list.pop(id);
+      setSelectedItems(list);
     }
   };
 
+  // update note / Note
+  const updateNote = (newNote) => {
+    let _newTemp = notes;
+    _newTemp.map((note) => {
+      if (note.id == newNote.id) {
+        note.title = newNote.title;
+        note.note = newNote.note;
+        note.starred = newNote.starred;
+        note.pinned = newNote.pinned;
+      }
+    });
+
+    storeData(_newTemp);
+    getData();
+  };
+  const vibrate = () => {
+    Vibration.vibrate(1 * 50);
+  };
 
   return (
     <View style={styles.container}>
@@ -164,7 +155,7 @@ export default function Home({ navigation, route }) {
             <TextInput
               onChangeText={setSearchedTerm}
               style={styles.searchText}
-              placeholder="Search to-doer"
+              placeholder="Search Note"
               value={searchedTerm}
             ></TextInput>
           </View>
@@ -176,55 +167,53 @@ export default function Home({ navigation, route }) {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
           >
-            {/* <TouchableOpacity
-                            activeOpacity={0.8}
-                            style={styles.chipItem}
-                        >
-                            <Text style={styles.chipText}>{formattedDate}</Text>
-                        </TouchableOpacity> */}
-            {/* <TouchableOpacity
-                            activeOpacity={0.8}
-                            style={styles.chipItem}
-                        >
-                            <Text style={styles.chipText}>{timeString}</Text>
-                        </TouchableOpacity> */}
-            {/* <TouchableOpacity
-                            activeOpacity={0.8}
-                            style={styles.chipItem}
-                        >
-                            <MaterialCommunityIcons
-                                name="pin"
-                                size={20}
-                                color="black"
-                            />
-                        </TouchableOpacity> */}
             {!isSelecting ? (
               <>
                 <TouchableOpacity
                   activeOpacity={0.8}
-                  style={[styles.chipItem, styles.chipSelecteds]}
-                  onPress={() => navigation.navigate("Starred")}
+                  style={[styles.chipItem]}
+                  onPress={() => {
+                    navigation.navigate("Starred");
+                    vibrate();
+                  }}
                 >
-                  <AntDesign
+                  {/* <AntDesign
                     name="staro"
                     size={20}
                     color="#687076"
                     style={{ alignSelf: "center" }}
-                  />
+                  /> */}
+                  <Text style={styles.chipText}>Favourites</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.chipItem}
-                  onPress={() => navigation.navigate("Codes")}
+                  onPress={() => {
+                    navigation.navigate("Codes");
+                    vibrate();
+                  }}
                 >
                   <Text style={styles.chipText}>Codes</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.chipItem}
+                  onPress={() => {
+                    navigation.navigate("Todoer");
+                    vibrate();
+                  }}
+                >
+                  <Text style={styles.chipText}>Todoer</Text>
+                </TouchableOpacity>
 
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.chipItem}
-                  onPress={() => setIsSelecting(true)}
+                  onPress={() => {
+                    setIsSelecting(true);
+                    vibrate();
+                  }}
                 >
                   <Ionicons
                     name="md-checkmark-circle"
@@ -245,8 +234,11 @@ export default function Home({ navigation, route }) {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.chipItem}
-                  onPress={() => {setSelectedItems([]) 
-                    setIsSelecting(false)}}
+                  onPress={() => {
+                    setSelectedItems([]);
+                    setIsSelecting(false);
+                    vibrate();
+                  }}
                 >
                   <Ionicons
                     name="md-close-circle-sharp"
@@ -256,27 +248,14 @@ export default function Home({ navigation, route }) {
                 </TouchableOpacity>
               </>
             )}
-            {/* <TouchableOpacity
-                                activeOpacity={0.8}
-                                style={styles.chipItem}
-                            >
-                                <Ionicons name="school" size={20} color="black" />
-                            </TouchableOpacity> */}
-            {/* <TouchableOpacity
-                            activeOpacity={0.8}
-                            style={styles.chipItem}
-                        >
-                            <Entypo name="code" size={20} color="black" />
-                        </TouchableOpacity> */}
           </ScrollView>
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
-          {doers.length == 0 && pinnedItems.length == 0 && (
+          {/* Message info */}
+          {notes.length == 0 && pinnedItems.length == 0 && (
             <Text style={styles.infoText}>
-              Your to-doer list is currently empty! {"\n"}
-              Let's get started by tapping on{"\n"}
-              New Doer? below!
+              Your list is currently empty! {"\n"}
             </Text>
           )}
           {/* pinned items */}
@@ -296,47 +275,31 @@ export default function Home({ navigation, route }) {
 
           {!searchedTerm &&
             pinnedItems.map((item) => (
-              <Doer
+              <Note
                 title={item.title}
                 note={item.note}
                 navigation={navigation}
                 id={item.id}
                 key={item.id}
-                deletion={handleDeleteDoer}
+                deletion={handleDeleteNote}
                 starred={item.starred}
                 pinned={item.pinned}
               />
             ))}
+          {/* seperator */}
           {pinnedItems.length != 0 && <View style={styles.separator}></View>}
-          {/* <Text style={styles.viewText}>unPinned</Text> */}
-          {/* other items */}
-          {/* {doers.map((item) => {
-                        if (!item.pinned) {
-                            return (
-                                <Doer
-                                    title={item.title}
-                                    note={item.note}
-                                    navigation={navigation}
-                                    id={item.id}
-                                    key={item.id}
-                                    deletion={handleDeleteDoer}
-                                    starred={item.starred}
-                                    pinned={item.pinned}
-                                />
-                            );
-                        }
-                    })} */}
+          {/* notes/ notes */}
           {!searchedTerm &&
-            doers.map((item) => {
+            notes.map((item) => {
               if (!item.pinned) {
                 return (
-                  <Doer
+                  <Note
                     title={item.title}
                     note={item.note}
                     navigation={navigation}
                     id={item.id}
                     key={item.id}
-                    deletion={handleDeleteDoer}
+                    deletion={handleDeleteNote}
                     starred={item.starred}
                     pinned={item.pinned}
                     isSelection={isSelecting}
@@ -346,28 +309,29 @@ export default function Home({ navigation, route }) {
               }
             })}
 
-          {/* only if the search bar is not empty */}
+          {/*if the search bar is not empty */}
           {searchedTerm &&
             searchResults.map((item) => (
-              <Doer
+              <Note
                 title={item.title}
                 note={item.note}
                 navigation={navigation}
                 id={item.id}
                 key={item.id}
-                deletion={handleDeleteDoer}
+                deletion={handleDeleteNote}
                 starred={item.starred}
                 pinned={item.pinned}
               />
             ))}
         </ScrollView>
-        <View style={styles.newDoerContainer}>
-          <View style={styles.newDoerBar}>
+        {/* Add Section */}
+        <View style={styles.newNoteContainer}>
+          <View style={styles.newNoteBar}>
             <Text
-              onPress={() => navigation.navigate("DoerInput")}
-              style={styles.newDoerText}
+              onPress={() => navigation.navigate("NoteInput")}
+              style={styles.newNoteText}
             >
-              New Doer?
+              New Note?
             </Text>
           </View>
         </View>
@@ -409,7 +373,7 @@ const styles = StyleSheet.create({
     fontWeight: "semibold",
     fontFamily: "Inter_400Regular",
   },
-  newDoerBar: {
+  newNoteBar: {
     width: "100%",
     backgroundColor: "#DFE3E6",
     padding: 10,
@@ -418,7 +382,7 @@ const styles = StyleSheet.create({
     borderColor: "#DFE3E6",
     marginTop: 9,
   },
-  newDoerText: {
+  newNoteText: {
     fontSize: 20,
     color: "#687076",
     fontWeight: "medium",
@@ -432,7 +396,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#DFE3E6",
     marginRight: 15,
     borderRadius: 11,
-    // padding: 5,
     paddingVertical: 6,
     paddingHorizontal: 9,
   },
@@ -446,7 +409,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#687076",
   },
-  doerView: {
+  NoteView: {
     width: "10%",
     flex: 1,
   },
@@ -469,6 +432,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
     textAlign: "center",
+    color: "#687076",
   },
   buttonExample: {
     backgroundColor: "#DFE3E6",

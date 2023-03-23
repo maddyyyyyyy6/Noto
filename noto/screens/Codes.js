@@ -1,5 +1,4 @@
 import {
-    FlatList,
     StyleSheet,
     Text,
     TextInput,
@@ -7,7 +6,7 @@ import {
     View,
     ScrollView,
 } from "react-native";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 import Code from "../components/Code";
@@ -22,10 +21,10 @@ export default function Codes({ navigation }) {
         "Rust",
         "Bash",
     ]);
+    // refreshing when focused on page
     const isFocused = useIsFocused();
 
     // get list from async storage
-
     const getData = async () => {
         try {
             const datalist = await AsyncStorage.getItem("@codes");
@@ -33,7 +32,7 @@ export default function Codes({ navigation }) {
             const codeslist = data;
             setCodes(codeslist);
         } catch (e) {
-            //
+            // showing error
         }
     };
 
@@ -41,7 +40,6 @@ export default function Codes({ navigation }) {
         navigation.navigate("CodeInput");
     };
 
-    // console.log(list);
     useEffect(() => {
         if (isFocused) {
             // Fetch data or trigger any function here
@@ -52,6 +50,7 @@ export default function Codes({ navigation }) {
     return (
         <View style={styles.container}>
             <View style={styles.CodesContainer}>
+                {/* Header */}
                 <View style={styles.searchContainer}>
                     <View style={styles.searchBar}>
                         <TextInput
@@ -60,34 +59,13 @@ export default function Codes({ navigation }) {
                         ></TextInput>
                     </View>
                 </View>
+                {/* chips Sections */}
                 <View style={styles.chipsContainer}>
                     <ScrollView
                         bouncesZoom={true}
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
                     >
-                        {/* <TouchableOpacity
-                            activeOpacity={0.8}
-                            style={styles.chipItem}
-                        >
-                            <MaterialCommunityIcons
-                                name="pin"
-                                size={20}
-                                color="black"
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            activeOpacity={0.8}
-                            style={[styles.chipItem, styles.chipSelecteds]}
-                        >
-                            <AntDesign
-                                name="star"
-                                size={20}
-                                color="black"
-                                style={{ alignSelf: "center" }}
-                            />
-                        </TouchableOpacity> */}
-
                         {/* some chips for languages */}
                         {languages.map((language) => (
                             <TouchableOpacity
@@ -99,10 +77,19 @@ export default function Codes({ navigation }) {
                         ))}
                     </ScrollView>
                 </View>
+                {/* List Section */}
                 <ScrollView
                     style={styles.notoContainer}
                     showsVerticalScrollIndicator={false}
                 >
+
+                    {
+                        codes.length == 0 && (
+                            <Text style={styles.infoText}>
+                                No Codes Saved!
+                            </Text>
+                        )
+                    }
                     {codes.map((item) => (
                         <Code
                             key={item.id}
@@ -110,9 +97,11 @@ export default function Codes({ navigation }) {
                             code={item.code}
                             navigation={navigation}
                             language={item.language}
+                            id={item.id}
                         />
                     ))}
                 </ScrollView>
+                {/* Add Section */}
                 <View>
                     <TouchableOpacity
                         style={styles.newCodesBar}
@@ -211,4 +200,12 @@ const styles = StyleSheet.create({
         fontWeight: "medium",
         fontFamily: "Inter_400Regular",
     },
+    infoText: {
+        fontFamily: "Inter_400Regular",
+        fontSize: 18,
+        alignSelf: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        color:"#687076"
+      },
 });
