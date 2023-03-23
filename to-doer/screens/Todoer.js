@@ -57,7 +57,7 @@ export default function Todoer({navigation}) {
     <View style={styles.container}>
       <View style={styles.homeContainer}>
         {/* Header */}
-        <View style={styles.searchContainer}>
+        {/* <View style={styles.searchContainer}>
           <View style={[styles.searchBar,{borderColor:getNewBarTextColor()}]}>
             <TextInput
               // onChangeText={setSearchedTerm}
@@ -67,7 +67,7 @@ export default function Todoer({navigation}) {
               placeholderTextColor={getNewBarTextColor()}
             ></TextInput>
           </View>
-        </View>
+        </View> */}
         {/* State */}
         <View style={styles.chipsContainer}>
           <TouchableOpacity
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
   },
   chipsContainer: {
     flexDirection: "row",
-    marginVertical: 9,
+    marginBottom: 9,
     justifyContent: "space-between",
   },
   chipItem: {
