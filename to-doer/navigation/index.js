@@ -1,7 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import Home from "../screens/Home";
-import DoerViewer from "../screens/DoerViewer";
-import DoerInput from "../screens/DoerInput";
+import NoteViewer from "../screens/NoteViewer";
+import NoteInput from "../screens/NoteInput";
 import Starred from "../screens/Starred";
 import Codes from "../screens/Codes";
 import CodeInput from "../screens/CodeInput";
@@ -17,7 +17,7 @@ export default function MyStack() {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        gestureEnabled: true,
+        gestureEnabled: false,
         gestureDirection: "horizontal",
         cardStyleInterpolator: ({ current, layouts }) => {
           return {
@@ -61,16 +61,21 @@ export default function MyStack() {
         component={TODOconfig}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="DoerInput"
-        component={DoerInput}
+      {/* <Stack.Screen
+        name="NoteInput"
+        component={NoteInput}
         options={{
           headerShown: false,
         }}
+      /> */}
+      <Stack.Screen
+        name="NoteInput"
+        component={NoteInput}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Viewer"
-        component={DoerViewer}
+        component={NoteViewer}
         options={{
           headerShown: false,
         }}

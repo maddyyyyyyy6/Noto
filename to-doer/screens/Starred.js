@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Doer from "../components/Doer";
+import Note from "../components/Note";
 export default function Starred({ navigation }) {
     const [isStarred, setIsStarred] = useState(false);
     const [list, setList] = useState([]);
@@ -17,7 +17,7 @@ export default function Starred({ navigation }) {
     // get list from async storage
     const getData = async () => {
         try {
-            const datalist = await AsyncStorage.getItem("@doers");
+            const datalist = await AsyncStorage.getItem("@notes");
             const data = JSON.parse(datalist) || [];
 
             // sort it by starred
@@ -73,7 +73,7 @@ export default function Starred({ navigation }) {
                         </Text>
                     )}
                     {list.map((item) => (
-                        <Doer
+                        <Note
                             key={item.id}
                             title={item.title}
                             note={item.note}

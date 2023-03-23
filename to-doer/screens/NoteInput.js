@@ -4,7 +4,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import { useState, useRef, useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-const DoerInput = ({ navigation }) => {
+const NoteInput = ({ navigation }) => {
     const [storage,setStorage] = useState([])
     const [isPinned, setIsPinned] = useState(false);
     const [isStarred, setIsStarred] = useState(false);
@@ -26,15 +26,15 @@ const DoerInput = ({ navigation }) => {
 
     // for handling the create button functionality
     const handleCreate = () => {
-        CreateDoer()
+        CreateNote()
         navigation.goBack()
         Keyboard.dismiss()
 
         // if (title) {
-        //     CreateDoer()
+        //     CreateNote()
         //     navigation.goBack()
         // } else if (note) {
-        //     CreateDoer()
+        //     CreateNote()
         //     navigation.goBack()
         //     Keyboard.dismiss()
 
@@ -46,12 +46,12 @@ const DoerInput = ({ navigation }) => {
     };
 
     const getData  = async() => {
-        const data = await AsyncStorage.getItem("@doers");
+        const data = await AsyncStorage.getItem("@notes");
         const dataJson = JSON.parse(data) || []
         setStorage(dataJson)
     }
 
-    const CreateDoer = () => {
+    const CreateNote = () => {
         const data = {
             title: title,
             note: note,
@@ -68,7 +68,7 @@ const DoerInput = ({ navigation }) => {
 
     const saveToStorage = async (_storage) => {
         const _storageString = JSON.stringify(_storage)
-        await AsyncStorage.setItem("@doers",_storageString)
+        await AsyncStorage.setItem("@notes",_storageString)
     }
 
     useEffect(() => {
@@ -87,7 +87,7 @@ const DoerInput = ({ navigation }) => {
                         style={{ marginRight: 10 }}
                         onPress={() => handleBack()}
                     />
-                    <Text style={styles.headerText}>New Doer?</Text>
+                    <Text style={styles.headerText}>New Note?</Text>
                     {(title || note) && <TouchableOpacity
                         style={styles.button}
                         onPress={handleCreate}
@@ -118,7 +118,7 @@ const DoerInput = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 {/* Input */}
-                <View style={styles.NewDoerContainer}>
+                <View style={styles.NewNoteContainer}>
                     <TextInput
                         ref={titleInputRef}
                         style={styles.inputTitle}
@@ -144,7 +144,8 @@ const DoerInput = ({ navigation }) => {
         </View>
     );
 };
-export default DoerInput;
+export default NoteInput;
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -174,7 +175,7 @@ const styles = StyleSheet.create({
     headerIcons: {
         marginLeft: 5,
     },
-    NewDoerContainer: {
+    NewNoteContainer: {
         flex: 1,
         width: "100%",
         borderWidth: 1,

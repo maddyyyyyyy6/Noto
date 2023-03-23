@@ -8,7 +8,7 @@ import {
   StatusBar,
   Vibration,
 } from "react-native";
-import Doer from "../components/Doer";
+import Note from "../components/Note";
 import { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { EvilIcons, Ionicons } from "@expo/vector-icons";
@@ -16,7 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function Home({ navigation, route }) {
-  const [doers, setDoers] = useState([]);
+  const [notes, setNotes] = useState([]);
   const [pinnedItems, setPinnedItems] = useState([]);
   const [searchedTerm, setSearchedTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -28,26 +28,25 @@ export default function Home({ navigation, route }) {
   // Refreshing on Focus
   const isFocused = useIsFocused();
 
-
   // for asyncstorage
-  const storeData = async (doers) => {
+  const storeData = async (notes) => {
     try {
-      const jsonValue = JSON.stringify(doers);
-      await AsyncStorage.setItem("@doers", jsonValue);
+      const jsonValue = JSON.stringify(notes);
+      await AsyncStorage.setItem("@notes", jsonValue);
     } catch (e) {
       // saving error
     }
   };
 
-  // getting doers list from Asyncstorage
+  // getting notes list from Asyncstorage
   const getData = async () => {
     try {
-      const jsonValue = await AsyncStorage.getItem("@doers");
+      const jsonValue = await AsyncStorage.getItem("@notes");
       const data = JSON.parse(jsonValue) || [];
       // for sorting pinned notes
       const sortpinned = data.filter((item) => item.pinned);
       setPinnedItems(sortpinned);
-      setDoers(data);
+      setNotes(data);
     } catch (e) {
       // error reading value
     }
@@ -59,10 +58,10 @@ export default function Home({ navigation, route }) {
 
   useEffect(() => {
     if (isFocused) {
-        // Fetch data or trigger any function here
-        getData();
+      // Fetch data or trigger any function here
+      getData();
     }
-}, [isFocused]);
+  }, [isFocused]);
 
   // effect when user typed in search if empty no change
   useEffect(() => {
@@ -70,80 +69,75 @@ export default function Home({ navigation, route }) {
   }, [searchedTerm]);
 
   // for selection functions
-  
-  
+
   // delete Button bulk selection
   const handleDeleteButton = () => {
-    let selected = selectedItems
-    let list = doers
-    list = list.filter(item => !selected.includes(item.id))
-    storeData(list)
-    getData()
-    setIsSelecting(false)
-    vibrate()
-
+    let selected = selectedItems;
+    let list = Notes;
+    list = list.filter((item) => !selected.includes(item.id));
+    storeData(list);
+    getData();
+    setIsSelecting(false);
+    vibrate();
   };
 
   // Update and Edit storing and getting notes
   // useEffect(() => {
   //   // create
-  //   let newDoer = route.params?.doer;
-  //   if (newDoer) {
-  //     storeData([...doers, newDoer]);
-  //     newDoer = "";
+  //   let newNote = route.params?.Note;
+  //   if (newNote) {
+  //     storeData([...Notes, newNote]);
+  //     newNote = "";
   //     getData();
   //   }
-    
+
   // }, [route.params]);
 
-  // delete from doerEdit
-  const handleDeleteDoer = (id) => {
-    const updateDoers = doers.filter((one) => one.id != id);
-    storeData(updateDoers);
+  // delete from NoteEdit
+  const handleDeleteNote = (id) => {
+    const updateNotes = notes.filter((one) => one.id != id);
+    storeData(updateNotes);
     getData();
   };
 
   // search handling function
   const handleSearch = (_searchTerm) => {
-    let copy = doers;
+    let copy = notes;
     let search = copy.filter((item) => item.title.includes(_searchTerm));
     setSearchResults(search);
   };
 
   // multi selection handling for storing ids in selected Items
-  const handleSelection = (id,action) => {
-    if(action == "add") {
-        let list = selectedItems
-        list.push(id)
-        setSelectedItems(list)
-    }else if(action =="remove") {
-        let list = selectedItems
-        list.pop(id)
-        setSelectedItems(list)
-      
+  const handleSelection = (id, action) => {
+    if (action == "add") {
+      let list = selectedItems;
+      list.push(id);
+      setSelectedItems(list);
+    } else if (action == "remove") {
+      let list = selectedItems;
+      list.pop(id);
+      setSelectedItems(list);
     }
   };
 
-  // update note / doer
-  const updateNote =(newNote) => {
-    let _newTemp = doers;
-      _newTemp.map((doer) => {
-        if (doer.id == newNote.id) {
-          doer.title = newNote.title;
-          doer.note = newNote.note;
-          doer.starred = newNote.starred;
-          doer.pinned = newNote.pinned;
-        }
-      });
+  // update note / Note
+  const updateNote = (newNote) => {
+    let _newTemp = notes;
+    _newTemp.map((note) => {
+      if (note.id == newNote.id) {
+        note.title = newNote.title;
+        note.note = newNote.note;
+        note.starred = newNote.starred;
+        note.pinned = newNote.pinned;
+      }
+    });
 
-      storeData(_newTemp);
-      getData();
-
-  }
+    storeData(_newTemp);
+    getData();
+  };
   const vibrate = () => {
-    Vibration.vibrate(1*50)
-  }
-
+    Vibration.vibrate(1 * 50);
+  };
 
   return (
     <View style={styles.container}>
@@ -161,7 +155,7 @@ export default function Home({ navigation, route }) {
             <TextInput
               onChangeText={setSearchedTerm}
               style={styles.searchText}
-              placeholder="Search to-doer"
+              placeholder="Search Note"
               value={searchedTerm}
             ></TextInput>
           </View>
@@ -173,15 +167,14 @@ export default function Home({ navigation, route }) {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
           >
-            
             {!isSelecting ? (
               <>
                 <TouchableOpacity
                   activeOpacity={0.8}
-                  style={[styles.chipItem, styles.chipSelecteds]}
+                  style={[styles.chipItem]}
                   onPress={() => {
-                    navigation.navigate("Starred") 
-                    vibrate()
+                    navigation.navigate("Starred");
+                    vibrate();
                   }}
                 >
                   {/* <AntDesign
@@ -197,10 +190,9 @@ export default function Home({ navigation, route }) {
                   activeOpacity={0.8}
                   style={styles.chipItem}
                   onPress={() => {
-                    navigation.navigate("Codes")
-                    vibrate()
+                    navigation.navigate("Codes");
+                    vibrate();
                   }}
-
                 >
                   <Text style={styles.chipText}>Codes</Text>
                 </TouchableOpacity>
@@ -208,10 +200,9 @@ export default function Home({ navigation, route }) {
                   activeOpacity={0.8}
                   style={styles.chipItem}
                   onPress={() => {
-                    navigation.navigate("Todoer")
-                    vibrate()
+                    navigation.navigate("Todoer");
+                    vibrate();
                   }}
-
                 >
                   <Text style={styles.chipText}>Todoer</Text>
                 </TouchableOpacity>
@@ -220,9 +211,9 @@ export default function Home({ navigation, route }) {
                   activeOpacity={0.8}
                   style={styles.chipItem}
                   onPress={() => {
-                    setIsSelecting(true)
-                                    vibrate()
-                                  }}
+                    setIsSelecting(true);
+                    vibrate();
+                  }}
                 >
                   <Ionicons
                     name="md-checkmark-circle"
@@ -243,9 +234,11 @@ export default function Home({ navigation, route }) {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.chipItem}
-                  onPress={() => {setSelectedItems([]) 
-                    setIsSelecting(false)
-                  vibrate()}}
+                  onPress={() => {
+                    setSelectedItems([]);
+                    setIsSelecting(false);
+                    vibrate();
+                  }}
                 >
                   <Ionicons
                     name="md-close-circle-sharp"
@@ -260,7 +253,7 @@ export default function Home({ navigation, route }) {
 
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* Message info */}
-          {doers.length == 0 && pinnedItems.length == 0 && (
+          {notes.length == 0 && pinnedItems.length == 0 && (
             <Text style={styles.infoText}>
               Your list is currently empty! {"\n"}
             </Text>
@@ -282,31 +275,31 @@ export default function Home({ navigation, route }) {
 
           {!searchedTerm &&
             pinnedItems.map((item) => (
-              <Doer
+              <Note
                 title={item.title}
                 note={item.note}
                 navigation={navigation}
                 id={item.id}
                 key={item.id}
-                deletion={handleDeleteDoer}
+                deletion={handleDeleteNote}
                 starred={item.starred}
                 pinned={item.pinned}
               />
             ))}
-            {/* seperator */}
+          {/* seperator */}
           {pinnedItems.length != 0 && <View style={styles.separator}></View>}
-          {/* notes/ doers */}
+          {/* notes/ notes */}
           {!searchedTerm &&
-            doers.map((item) => {
+            notes.map((item) => {
               if (!item.pinned) {
                 return (
-                  <Doer
+                  <Note
                     title={item.title}
                     note={item.note}
                     navigation={navigation}
                     id={item.id}
                     key={item.id}
-                    deletion={handleDeleteDoer}
+                    deletion={handleDeleteNote}
                     starred={item.starred}
                     pinned={item.pinned}
                     isSelection={isSelecting}
@@ -319,26 +312,26 @@ export default function Home({ navigation, route }) {
           {/*if the search bar is not empty */}
           {searchedTerm &&
             searchResults.map((item) => (
-              <Doer
+              <Note
                 title={item.title}
                 note={item.note}
                 navigation={navigation}
                 id={item.id}
                 key={item.id}
-                deletion={handleDeleteDoer}
+                deletion={handleDeleteNote}
                 starred={item.starred}
                 pinned={item.pinned}
               />
             ))}
         </ScrollView>
         {/* Add Section */}
-        <View style={styles.newDoerContainer}>
-          <View style={styles.newDoerBar}>
+        <View style={styles.newNoteContainer}>
+          <View style={styles.newNoteBar}>
             <Text
-              onPress={() => navigation.navigate("DoerInput")}
-              style={styles.newDoerText}
+              onPress={() => navigation.navigate("NoteInput")}
+              style={styles.newNoteText}
             >
-              New Doer?
+              New Note?
             </Text>
           </View>
         </View>
@@ -380,7 +373,7 @@ const styles = StyleSheet.create({
     fontWeight: "semibold",
     fontFamily: "Inter_400Regular",
   },
-  newDoerBar: {
+  newNoteBar: {
     width: "100%",
     backgroundColor: "#DFE3E6",
     padding: 10,
@@ -389,7 +382,7 @@ const styles = StyleSheet.create({
     borderColor: "#DFE3E6",
     marginTop: 9,
   },
-  newDoerText: {
+  newNoteText: {
     fontSize: 20,
     color: "#687076",
     fontWeight: "medium",
@@ -416,7 +409,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#687076",
   },
-  doerView: {
+  NoteView: {
     width: "10%",
     flex: 1,
   },
@@ -439,7 +432,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
     textAlign: "center",
-    color:"#687076"
+    color: "#687076",
   },
   buttonExample: {
     backgroundColor: "#DFE3E6",

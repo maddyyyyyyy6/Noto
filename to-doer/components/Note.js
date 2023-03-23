@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, Vibration, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const Doer = ({ title, note, id, navigation, starred, pinned,isSelection,setSelectedList }) => {
+const Note = ({ title, note, id, navigation, starred, pinned,isSelection,setSelectedList }) => {
     const [isSelecting,setIsSelecting] = useState(false)
     const [isSelected,setIsSelected] = useState(false)
     const [border,setBorder] = useState({
@@ -60,12 +60,12 @@ const Doer = ({ title, note, id, navigation, starred, pinned,isSelection,setSele
 
     return (
         <TouchableOpacity
-            style={[styles.doerContainer, { borderWidth: border.width,borderColor:border.color }]}
+            style={[styles.noteContainer, { borderWidth: border.width,borderColor:border.color }]}
             activeOpacity={0.7}
             onPress={handlePress}
         >
             <View style={styles.headerContainer}>
-                <Text style={styles.doerTitle}>{title}</Text>
+                <Text style={styles.noteTitle}>{title}</Text>
                 {pinned && (
                     <MaterialCommunityIcons
                         name="pin"
@@ -74,14 +74,14 @@ const Doer = ({ title, note, id, navigation, starred, pinned,isSelection,setSele
                     />
                 )}
             </View>
-            <Text style={styles.doerDes}>{note}</Text>
+            <Text style={styles.noteDes}>{note}</Text>
         </TouchableOpacity>
     );
 };
-export default Doer;
+export default Note;
 
 const styles = StyleSheet.create({
-    doerContainer: {
+    noteContainer: {
         borderWidth: 1,
         backgroundColor: "#fff",
         padding: 10,
@@ -95,19 +95,19 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
     },
-    doerTitle: {
+    noteTitle: {
         fontSize: 24,
         color: "#687076",
         fontWeight: "500",
         fontFamily: "Inter_500Medium",
     },
-    doerDes: {
+    noteDes: {
         fontSize: 17,
         color: "#687076",
         fontWeight: "200",
         fontFamily: "Inter_300Light",
     },
-    shadowDoer: {
+    shadownote: {
         shadowColor: "#7A7A7A",
         shadowOffset: {
             width: -1,

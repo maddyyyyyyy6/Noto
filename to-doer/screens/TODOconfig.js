@@ -117,7 +117,7 @@ export default function TODOconfig({ navigation, route }) {
             <TouchableOpacity
               style={[styles.button, { backgroundColor: getTrackColor() }]}
               onPress={handleSave}
-              disabled={!title && !code}
+              disabled={!title}
             >
               <Text
                 style={[styles.buttonText, { color: getNewBarTextColor() }]}
